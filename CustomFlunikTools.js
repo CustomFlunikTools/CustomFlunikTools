@@ -6,6 +6,7 @@
 // @author      Flunik
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // ==/UserScript==
+// github test
 (function () {
   var FlunikTools_main = function () {
     try {
