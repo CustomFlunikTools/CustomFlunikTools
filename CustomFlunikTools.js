@@ -248,6 +248,7 @@
 
                 for (var nBuildings in buildings.d) {
                   var building = buildings.d[nBuildings];
+                  if (!building.CanUpgrade()) continue; //KRS_L
                   var name = building.get_UnitGameData_Obj().dn;
                   var baselvl = city.get_LvlBase();
                   var buildinglvl = building.get_CurrentLevel();
@@ -308,6 +309,7 @@
                 var offenceUnits = units.get_OffenseUnits();
                 for (var nUnit in offenceUnits.d) {
                   var unit = offenceUnits.d[nUnit];
+                  if (!unit.CanUpgrade()) continue; //KRS_L
                   var baselvl = city.get_LvlBase();
                   var unitlvl = unit.get_CurrentLevel();
                   var unit_obj = {
@@ -324,6 +326,7 @@
                 var defenceUnits = units.get_DefenseUnits();
                 for (var nUnit in defenceUnits.d) {
                   var unit = defenceUnits.d[nUnit];
+                  if (!unit.CanUpgrade()) continue; //KRS_L
                   var baselvl = city.get_LvlBase();
                   var unitlvl = unit.get_CurrentLevel();
                   var unit_obj = {
@@ -349,6 +352,29 @@
       try {
         if (typeof qx != 'undefined' && qx.core.Init.getApplication() && qx.core.Init.getApplication().getUIItem(ClientLib.Data.Missions.PATH.BAR_NAVIGATION) && qx.core.Init.getApplication().getUIItem(ClientLib.Data.Missions.PATH.BAR_NAVIGATION).isVisible()) {
           createFlunikTools();
+          
+          for (var key in ClientLib.Data.CityBuilding.prototype) { //KRS_L
+            if (ClientLib.Data.CityBuilding.prototype[key] !== null) {
+              var strFunction = ClientLib.Data.CityBuilding.prototype[key].toString();
+              if (typeof ClientLib.Data.CityBuilding.prototype[key] === 'function' & strFunction.indexOf("true).l.length==0)){return true;}}return false") > -1) {
+                ClientLib.Data.CityBuilding.prototype.CanUpgrade = ClientLib.Data.CityBuilding.prototype[key];
+                break;
+              }
+            }
+          }
+ 
+          for (var key in ClientLib.Data.CityUnit.prototype) { //KRS_L
+            if (ClientLib.Data.CityUnit.prototype[key] !== null) {
+              var strFunction = ClientLib.Data.CityUnit.prototype[key].toString();
+              if (typeof ClientLib.Data.CityUnit.prototype[key] === 'function' & strFunction.indexOf(".l.length>0)){return false;}") > -1) {
+                ClientLib.Data.CityUnit.prototype.CanUpgrade = ClientLib.Data.CityUnit.prototype[key];
+                break;
+              }
+            }
+          }
+ 
+          
+          
           window.FlunikTools.Main.getInstance().initialize();
         } else {
           window.setTimeout(FlunikTools_checkIfLoaded, 1000);
