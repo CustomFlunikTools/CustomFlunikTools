@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130217a
+// @version     20130217b
 // ==/UserScript==
 
 /*
@@ -219,22 +219,26 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 // broken on 2nd pass?			var tiberiumisfull = this.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
 								var tiberiumisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
 								var crystalisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
+								console.debug("FLUNIK: Crystal current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
+								console.debug("FLUNIK: Tiberium current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
 								
 								if (!tiberiumisfull) {
-									
-									if (CC.get_CurrentLevel() == lowestoffencelevel && crystalisfull && CC.CanUpgrade()) {
-										console.debug("FLUNIK: Crystal is full - Upgrading CC since offencelevel is maximum");
-										CC.Upgrade();
-										continue;
-									};
 
-									if (DHQ.get_CurrentLevel() == lowestdefencelevel && crystalisfull && DHQ.CanUpgrade()) {
-										console.debug("FLUNIK: Crystal is full - Upgrading DHQ since defencelevel is maximum");
-										DHQ.Upgrade();
-										continue;
-									};
+									if (crystalisfull) {
+										console.debug("FLUNIK: Crystal is full - attempting CC and DHQ upgrades if useful");
+										if (CC.get_CurrentLevel() == lowestoffencelevel && crystalisfull && CC.CanUpgrade()) {
+											console.debug("FLUNIK: Crystal is full - Upgrading CC since offencelevel is maximum");
+											CC.Upgrade();
+											continue;
+										};
 
-									console.debug("FLUNIK: Tiberium is not full - waiting - Current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
+										if (DHQ.get_CurrentLevel() == lowestdefencelevel && crystalisfull && DHQ.CanUpgrade()) {
+											console.debug("FLUNIK: Crystal is full - Upgrading DHQ since defencelevel is maximum");
+											DHQ.Upgrade();
+											continue;
+										};
+									}
+									console.debug("FLUNIK: Tiberium is not full - waiting for full - Current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
 									continue;
 								}
 								
