@@ -229,19 +229,13 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									};
 								}; // for buildings 
 
-								var airRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Aircraft, false);
-								var vehRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Vehicle, false);
-								var infRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Infantry, false);
-								var maxRT = Math.max(airRT,vehRT,infRT);
-								console.debug("FLUNIK: Support info: Max %d AIR %d VEH %d INF %d", maxRT, airRT, vehRT, infRT);
-								
 								// get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
 								// or
 // broken on 2nd pass?			var tiberiumisfull = this.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
 								var tiberiumisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
 								var crystalisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
-								console.debug("FLUNIK: Crystal current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
-								console.debug("FLUNIK: Tiberium current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
+//								console.debug("FLUNIK: Tiberium current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
+//								console.debug("FLUNIK: Crystal current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
 								
 								if (!tiberiumisfull) {
 
@@ -260,7 +254,10 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 											return;
 											continue;
 										};
+									} else {
+										console.debug("FLUNIK: Crystal is not full - Current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
 									}
+									
 									console.debug("FLUNIK: Tiberium is not full - waiting for full - Current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
 									continue;
 								}
@@ -343,8 +340,13 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								};
 
 
+								var airRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Aircraft, false);
+								var vehRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Vehicle, false);
+								var infRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Infantry, false);
+								var maxRT = Math.max(airRT,vehRT,infRT);
+								console.debug("FLUNIK: Support info in seconds: Max %d AIR %d VEH %d INF %d", maxRT, airRT, vehRT, infRT);
 								
-								if (maxRT>4) { // No point upgrading unless RT > 4
+								if (maxRT>14400) { // No point upgrading unless RT > 4 hours (14400 seconds)
 									switch (maxRT) {
 									case airRT:
 										// Air has highest RT
