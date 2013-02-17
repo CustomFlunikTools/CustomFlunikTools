@@ -244,12 +244,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										CY.Upgrade();
 										continue;
 									} else {
-										if (tiberiumisfull) {
-											console.debug("FLUNIK: The CY building level %d is lower than 25 but city is full - skipping to next", CY.get_CurrentLevel());
-										} else {
-											console.debug("FLUNIK: The CY building level %d is lower than 25 - waiting for resources", CY.get_CurrentLevel());
-											continue;
-										};
+										console.debug("FLUNIK: The CY building level %d is lower than 25 but city is full - skipping to next", CY.get_CurrentLevel());
 									};
 								};
 
@@ -259,12 +254,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										CC.Upgrade();
 										continue;
 									} else {
-										if (tiberiumisfull) {
-											console.debug("FLUNIK: The CC building level %d is lower than base level %d but city is full - skipping to next", CC.get_CurrentLevel(), baselvl);
-										} else {
-											console.debug("FLUNIK: The CC building level %d is lower than base level %d - waiting for resources", CC.get_CurrentLevel(), baselvl);
-											continue;
-										};
+										console.debug("FLUNIK: The CC building level %d is lower than base level %d but city is full - skipping to next", CC.get_CurrentLevel(), baselvl);
 									};
 								};
 
@@ -274,12 +264,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										CC.Upgrade();
 										continue;
 									} else {
-										if (tiberiumisfull) {
-											console.debug("FLUNIK: The CC building level %d matches lowest offence level %d but city is full - skipping to next", CC.get_CurrentLevel(), lowestoffencelevel);
-										} else {
-											console.debug("FLUNIK: The CC building level %d matches lowest offence level %d - waiting for resources", CC.get_CurrentLevel(), lowestoffencelevel);
-											continue;
-										};
+										console.debug("FLUNIK: The CC building level %d matches lowest offence level %d but city is full - skipping to next", CC.get_CurrentLevel(), lowestoffencelevel);
 									};
 								};
 
@@ -289,12 +274,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										DHQ.Upgrade();
 										continue;
 									} else {
-										if (tiberiumisfull) {
-											console.debug("FLUNIK: The DHQ building level %d is lower than base level %d but city is full - skipping to next", DHQ.get_CurrentLevel(), baselvl);
-										} else {
-											console.debug("FLUNIK: The DHQ building level %d is lower than base level %d - waiting for resources", DHQ.get_CurrentLevel(), baselvl);
-											continue;
-										};
+										console.debug("FLUNIK: The DHQ building level %d is lower than base level %d but city is full - skipping to next", DHQ.get_CurrentLevel(), baselvl);
 									};
 								};
 
@@ -304,12 +284,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										DHQ.Upgrade();
 										continue;
 									} else {
-										if (tiberiumisfull) {
-											console.debug("FLUNIK: The DHQ building level %d matches lowest defence level %d but city is full - skipping to next", DHQ.get_CurrentLevel(), lowestoffencelevel);
-										} else {
-											console.debug("FLUNIK: The DHQ building level %d matches lowest defence level %d - waiting for resources", DHQ.get_CurrentLevel(), lowestoffencelevel);
-											continue;
-										};
+										console.debug("FLUNIK: The DHQ building level %d matches lowest defence level %d but city is full - skipping to next", DHQ.get_CurrentLevel(), lowestoffencelevel);
 									};
 								};
 
@@ -319,12 +294,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										DF.Upgrade();
 										continue;
 									} else {
-										if (tiberiumisfull) {
-											console.debug("FLUNIK: The DF building level %d is lower than DHQ level %d but city is full - skipping to next", DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
-										} else {
-											console.debug("FLUNIK: The DF building level %d is lower than DHQ level %d - waiting for resources", DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
-											continue;
-										};
+										console.debug("FLUNIK: The DF building level %d is lower than DHQ level %d but city is full - skipping to next", DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
 									};
 								};
 
@@ -334,12 +304,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										SUPPORT.Upgrade();
 										continue;
 									} else {
-										if (tiberiumisfull) {
-											console.debug("FLUNIK: The SUPPORT building level %d is lower than DHQ level %d but city is full - skipping to next", SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
-										} else {
-											console.debug("FLUNIK: The SUPPORT building level %d is lower than DHQ level %d - waiting for resources", SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
-											continue;
-										};
+										console.debug("FLUNIK: The SUPPORT building level %d is lower than DHQ level %d but city is full - skipping to next", SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
 									};
 								};
 
@@ -356,12 +321,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 											AIR.Upgrade();
 											continue;
 										} else {
-											if (tiberiumisfull) {
-												console.debug("FLUNIK: The Airport level %d has repair time %d but city is full - skipping to next", AIR.get_CurrentLevel(), airRT);
-											} else {
-												console.debug("FLUNIK: The Airport level %d has repair time %d - waiting for resources", AIR.get_CurrentLevel(), airRT);
-												continue;
-											};
+											console.debug("FLUNIK: The Airport level %d has repair time %d but city is full - skipping to next", AIR.get_CurrentLevel(), airRT);
 										};
 										break;
 									case vehRT:
@@ -371,12 +331,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 											VEH.Upgrade();
 											continue;
 										} else {
-											if (tiberiumisfull) {
-												console.debug("FLUNIK: The Vehicle level %d has repair time %d but city is full - skipping to next", VEH.get_CurrentLevel(), vehRT);
-											} else {
-												console.debug("FLUNIK: The Vehicle level %d has repair time %d - waiting for resources", VEH.get_CurrentLevel(), vehRT);
-												continue;
-											};
+											console.debug("FLUNIK: The Vehicle level %d has repair time %d but city is full - skipping to next", VEH.get_CurrentLevel(), vehRT);
 										};
 										break;
 									case infRT:
@@ -386,22 +341,15 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 											INF.Upgrade();
 											continue;
 										} else {
-											if (tiberiumisfull) {
-												console.debug("FLUNIK: The Infantry level %d has repair time %d but city is full - skipping to next", INF.get_CurrentLevel(), infRT);
-											} else {
-												console.debug("FLUNIK: The Infantry level %d has repair time %d - waiting for resources", INF.get_CurrentLevel(), infRT);
-												continue;
-											};
+											console.debug("FLUNIK: The Infantry level %d has repair time %d but city is full - skipping to next", INF.get_CurrentLevel(), infRT);
 										};
 										break;
 									};
 								};
 
-
-								if (tiberiumisfull) {
-									console.debug("FLUNIK: Default upgrade - lowest building is %d level %d", lowestbuildingname, lowestbuildinglevel);
-									lowestbuilding.Upgrade();
-								};
+								console.debug("FLUNIK: Default upgrade - lowest building is %d level %d", lowestbuildingname, lowestbuildinglevel);
+								lowestbuilding.Upgrade();
+								
 							}; // for city
 						} // function autoupgrade
 					} // members
