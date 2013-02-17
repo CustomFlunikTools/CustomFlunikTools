@@ -77,7 +77,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 						},
 
 						 get_IsFull: function (city, type) {
-							if (city.GetResourceCount(type) <= city.GetResourceMaxStorage(type)) {
+							if (city.GetResourceCount(type) < city.GetResourceMaxStorage(type)) {
 								return false;
 							} else {
 								return true;
