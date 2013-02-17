@@ -107,7 +107,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								var lowestbuildinglevel = 999;
 								var lowestdefencelevel = 999;
 								var lowestoffencelevel = 999;
-								console.debug("FLUNIK: Analyzing city %d with level %d", cityname, baselvl);
+								console.debug("FLUNIK: ----------- Analyzing city %d with level %d", cityname, baselvl);
 
 
 								//get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
