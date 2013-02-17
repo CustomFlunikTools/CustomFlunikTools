@@ -129,13 +129,14 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (unitlvl<lowestoffencelevel && unit.CanUpgrade()) {
 										var lowestoffencelevel=unitlvl;
 										var lowestoffenceunit_obj=unit_obj;
-										console.debug("FLUNIK: The %d offence unit has a level of: %d", unit, unitlvl);
 									};
 								};
-								ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestoffenceunit_obj, null, null, true);
 								if (lowestoffencelevel==999) {
-									console.debug("FLUNIK: The offence units at max level of: %d", unitlvl);
+									console.debug("FLUNIK: The offence units are maxed out at level: %d", unitlvl);
 									lowestoffencelevel=unitlvl;
+								} else {
+									console.debug("FLUNIK: Upgrading %d offence unit from level of: %d", unit, unitlvl);
+									ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestoffenceunit_obj, null, null, true);
 								}
 
 								var defenceUnits = units.get_DefenseUnits();
@@ -150,13 +151,14 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (unitlvl<lowestdefencelevel && unit.CanUpgrade()) {
 										var lowestdefencelevel=unitlvl;
 										var lowestdefenceunit_obj=unit_obj;
-										console.debug("FLUNIK: The %d defence unit has a level of: %d", unit, unitlvl);
 									};
 								};
-								ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestdefenceunit_obj, null, null, true);
 								if (lowestdefencelevel==999) {
-									console.debug("FLUNIK: The defence units at max level of: %d", unitlvl);
+									console.debug("FLUNIK: The defence units are maxed out at level: %d", unitlvl);
 									lowestdefencelevel=unitlvl;
+								} else {
+									console.debug("FLUNIK: Upgrading %d defence unit from level of: %d", unit, unitlvl);
+									ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestdefenceunit_obj, null, null, true);
 								}
 
 								for (var nBuildings in buildings.d) {
@@ -229,12 +231,14 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										if (CC.get_CurrentLevel() == lowestoffencelevel && crystalisfull && CC.CanUpgrade()) {
 											console.debug("FLUNIK: Crystal is full - Upgrading CC since offencelevel is maximum");
 											CC.Upgrade();
+											return;
 											continue;
 										};
 
 										if (DHQ.get_CurrentLevel() == lowestdefencelevel && crystalisfull && DHQ.CanUpgrade()) {
 											console.debug("FLUNIK: Crystal is full - Upgrading DHQ since defencelevel is maximum");
 											DHQ.Upgrade();
+											return;
 											continue;
 										};
 									}
@@ -246,6 +250,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (CY.CanUpgrade()) {
 										console.debug("FLUNIK: The CY building level %d is lower than 25 - Upgrading", CY.get_CurrentLevel());
 										CY.Upgrade();
+										return;
 										continue;
 									} else {
 										console.debug("FLUNIK: The CY building level %d is lower than 25 but city is full - skipping to next", CY.get_CurrentLevel());
@@ -256,6 +261,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (CC.CanUpgrade()) {
 										console.debug("FLUNIK: The CC building level %d is lower than base level %d - Upgrading", CC.get_CurrentLevel(), baselvl);
 										CC.Upgrade();
+										return;
 										continue;
 									} else {
 										console.debug("FLUNIK: The CC building level %d is lower than base level %d but city is full - skipping to next", CC.get_CurrentLevel(), baselvl);
@@ -266,6 +272,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (CC.CanUpgrade()) {
 										console.debug("FLUNIK: The CC building level %d matches lowest offence level %d - Upgrading", CC.get_CurrentLevel(), lowestoffencelevel);
 										CC.Upgrade();
+										return;
 										continue;
 									} else {
 										console.debug("FLUNIK: The CC building level %d matches lowest offence level %d but city is full - skipping to next", CC.get_CurrentLevel(), lowestoffencelevel);
@@ -276,6 +283,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (DHQ.CanUpgrade()) {
 										console.debug("FLUNIK: The DHQ building level %d is lower than base level %d - Upgrading", DHQ.get_CurrentLevel(), baselvl);
 										DHQ.Upgrade();
+										return;
 										continue;
 									} else {
 										console.debug("FLUNIK: The DHQ building level %d is lower than base level %d but city is full - skipping to next", DHQ.get_CurrentLevel(), baselvl);
@@ -286,6 +294,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (DHQ.CanUpgrade()) {
 										console.debug("FLUNIK: The DHQ building level %d matches lowest defence level %d - Upgrading", DHQ.get_CurrentLevel(), lowestoffencelevel);
 										DHQ.Upgrade();
+										return;
 										continue;
 									} else {
 										console.debug("FLUNIK: The DHQ building level %d matches lowest defence level %d but city is full - skipping to next", DHQ.get_CurrentLevel(), lowestoffencelevel);
@@ -296,6 +305,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (DF.CanUpgrade()) {
 										console.debug("FLUNIK: The DF building level %d is lower than DHQ level %d - Upgrading", DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
 										DF.Upgrade();
+										return;
 										continue;
 									} else {
 										console.debug("FLUNIK: The DF building level %d is lower than DHQ level %d but city is full - skipping to next", DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
@@ -306,6 +316,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (DF.CanUpgrade()) {
 										console.debug("FLUNIK: The SUPPORT building level %d is lower than DHQ level %d - Upgrading", SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
 										SUPPORT.Upgrade();
+										return;
 										continue;
 									} else {
 										console.debug("FLUNIK: The SUPPORT building level %d is lower than DHQ level %d but city is full - skipping to next", SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
@@ -316,6 +327,8 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								var vehRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Vehicle, false);
 								var infRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Infantry, false);
 								var maxRT = Math.max(airRT,vehRT,infRT);
+								console.debug("FLUNIK: Support info: Max %d AIR %d VEH %d INF %d", maxRT, airRT, vehRT, infRT);
+								
 								if (maxRT>4) { // No point upgrading unless RT > 4
 									switch (maxRT) {
 									case airRT:
@@ -323,6 +336,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										if (AIR.CanUpgrade()) {
 											console.debug("FLUNIK: The Airport level %d has repair time of %d - Upgrading", AIR.get_CurrentLevel(), airRT);
 											AIR.Upgrade();
+											return;
 											continue;
 										} else {
 											console.debug("FLUNIK: The Airport level %d has repair time %d but city is full - skipping to next", AIR.get_CurrentLevel(), airRT);
@@ -333,6 +347,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										if (VEH.CanUpgrade()) {
 											console.debug("FLUNIK: The Vehicle level %d has repair time of %d - Upgrading", VEH.get_CurrentLevel(), vehRT);
 											VEH.Upgrade();
+											return;
 											continue;
 										} else {
 											console.debug("FLUNIK: The Vehicle level %d has repair time %d but city is full - skipping to next", VEH.get_CurrentLevel(), vehRT);
@@ -343,6 +358,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										if (INF.CanUpgrade()) {
 											console.debug("FLUNIK: The Infantry level %d has repair time of %d - Upgrading", INF.get_CurrentLevel(), infRT);
 											INF.Upgrade();
+											return;
 											continue;
 										} else {
 											console.debug("FLUNIK: The Infantry level %d has repair time %d but city is full - skipping to next", INF.get_CurrentLevel(), infRT);
@@ -351,8 +367,11 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									};
 								};
 
-								console.debug("FLUNIK: Default upgrade - lowest building is %d level %d", lowestbuildingname, lowestbuildinglevel);
-								lowestbuilding.Upgrade();
+								if (lowestbuilding.CanUpgrade()) {
+									console.debug("FLUNIK: Default upgrade - lowest building is %d level %d", lowestbuildingname, lowestbuildinglevel);
+									lowestbuilding.Upgrade();
+									return;
+								}
 								
 							}; // for city
 						} // function autoupgrade
