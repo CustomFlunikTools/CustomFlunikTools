@@ -209,18 +209,19 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										var SUPPORT=building;
 										continue;
 									};            
-									if 	(name == "Barracks") {
+									if 	(name == "Barracks" || name == "Hand of Nod") {
 										var INF=building;
 										continue;
 									};            
-									if 	(name == "Factory") {
+									if 	(name == "Factory" || name == "War Factory") {
 										var VEH=building;
 										continue;
 									};            
-									if 	(name == "Airfield") {
+									if 	(name == "Airfield" || name == "Airport") {
 										var AIR=building;
 										continue;
-									};            
+									}; 
+									
 									//console.debug("FLUNIK: The %d building has a level of: %d", name, buildinglvl);
 									if	(buildinglvl < lowestbuildinglevel && building.CanUpgrade())	{
 										var lowestbuildinglevel=buildinglvl;
