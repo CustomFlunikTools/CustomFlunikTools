@@ -134,6 +134,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								};
 								ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestoffenceunit_obj, null, null, true);
 								if (lowestoffencelevel==999) {
+									console.debug("FLUNIK: The offence units at max level of: %d", unitlvl);
 									lowestoffencelevel=unitlvl;
 								}
 
@@ -154,6 +155,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								};
 								ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestdefenceunit_obj, null, null, true);
 								if (lowestdefencelevel==999) {
+									console.debug("FLUNIK: The defence units at max level of: %d", unitlvl);
 									lowestdefencelevel=unitlvl;
 								}
 
@@ -231,8 +233,8 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										DHQ.Upgrade();
 										continue;
 									};
-									
-									console.debug("FLUNIK: Tiberium is not full - waiting");
+
+									console.debug("FLUNIK: Tiberium is not full - waiting - Current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
 									continue;
 								}
 								
