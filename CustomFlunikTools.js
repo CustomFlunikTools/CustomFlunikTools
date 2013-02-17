@@ -216,6 +216,12 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									};
 								}; // for buildings 
 
+								var airRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Aircraft, false);
+								var vehRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Vehicle, false);
+								var infRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Infantry, false);
+								var maxRT = Math.max(airRT,vehRT,infRT);
+								console.debug("FLUNIK: Support info: Max %d AIR %d VEH %d INF %d", maxRT, airRT, vehRT, infRT);
+								
 								// get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
 								// or
 // broken on 2nd pass?			var tiberiumisfull = this.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
@@ -323,11 +329,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									};
 								};
 
-								var airRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Aircraft, false);
-								var vehRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Vehicle, false);
-								var infRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Infantry, false);
-								var maxRT = Math.max(airRT,vehRT,infRT);
-								console.debug("FLUNIK: Support info: Max %d AIR %d VEH %d INF %d", maxRT, airRT, vehRT, infRT);
+
 								
 								if (maxRT>4) { // No point upgrading unless RT > 4
 									switch (maxRT) {
