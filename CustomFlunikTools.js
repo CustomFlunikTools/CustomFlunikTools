@@ -31,7 +31,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 			}
 
 			function createFlunikTools() {
-				console.log('FLUNIKTOLS createFlunikTools');
+				console.log('Custom FLUNIKTOLS createFlunikTools');
 
 				qx.Class.define("FlunikTools.Main", {
 					type: "singleton",
@@ -43,9 +43,9 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 
 						initialize: function () {
 
-							console.log('FLUNIKTOLS initialize');
+							console.log('Custom FLUNIKTOLS initialize');
 							AutoUpdateButton = new qx.ui.form.Button("AutoUpgrade", null).set({
-								toolTipText: "Autoupdate",
+								toolTipText: "Flunik",
 								width: 100,
 								height: 40,
 								maxWidth: 100,
@@ -133,6 +133,9 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									};
 								};
 								ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestoffenceunit_obj, null, null, true);
+								if (lowestoffencelevel==999) {
+									lowestoffencelevel=unitlvl;
+								}
 
 								var defenceUnits = units.get_DefenseUnits();
 								for (var nUnit in defenceUnits.d) {
@@ -150,6 +153,9 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									};
 								};
 								ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestdefenceunit_obj, null, null, true);
+								if (lowestdefencelevel==999) {
+									lowestdefencelevel=unitlvl;
+								}
 
 								for (var nBuildings in buildings.d) {
 									var building = buildings.d[nBuildings];
@@ -210,7 +216,26 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								// or
 // broken on 2nd pass?			var tiberiumisfull = this.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
 								var tiberiumisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
+								var crystalisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
+								
+								if (!tiberiumisfull) {
+									
+									if (CC.get_CurrentLevel() == lowestoffencelevel && crystalisfull && CC.CanUpgrade()) {
+										console.debug("FLUNIK: Crystal is full - Upgrading CC since offencelevel is maximum");
+										CC.Upgrade();
+										continue;
+									};
 
+									if (DHQ.get_CurrentLevel() == lowestdefencelevel && crystalisfull && DHQ.CanUpgrade()) {
+										console.debug("FLUNIK: Crystal is full - Upgrading DHQ since defencelevel is maximum");
+										DHQ.Upgrade();
+										continue;
+									};
+									
+									console.debug("FLUNIK: Tiberium is not full - waiting");
+									continue;
+								}
+								
 								if (CY.get_CurrentLevel() < 25) {
 									if (CY.CanUpgrade()) {
 										console.debug("FLUNIK: The CY building level %d is lower than 25 - Upgrading", CY.get_CurrentLevel());
