@@ -4,10 +4,23 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130217b
+// @version     20130217c
 // ==/UserScript==
 
 /*
+Original Flunik tools would upgrade buildings randomly. I have tried to make the upgrading more
+intelligent. 
+
+Currently there is no real logic for unit upgrades other than those are done lowest level offence
+unit first followed by lowest level defence unit. Unit upgrades will spend crystals as soon as
+available at the moment but I would like to get those to wait until crystals is full as well. 
+
+As far as buildings go, first off I try to keep the base at maximum capacity since that gives us the 
+opportunity to use the resources in ways we see fit. This script will kick in when Tiberium
+is full to upgrade the best building it can. It will also try to upgrade the CC or DHQ any time
+the offence or defence units have maxed out.
+
+Here is the basic logic for building upgrades:  
 If CY is less than level 25 upgrade CY (max build sites in base)
 If CC < Base level upgrade CC
 If Offence Level = CC level upgrade CC
@@ -44,7 +57,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 						initialize: function () {
 
 							console.log('Custom FLUNIKTOLS initialize');
-							AutoUpdateButton = new qx.ui.form.Button("AutoUpgrade", null).set({
+							AutoUpdateButton = new qx.ui.form.Button("Flunik", null).set({
 								toolTipText: "Flunik",
 								width: 100,
 								height: 40,
