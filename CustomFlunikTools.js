@@ -52,7 +52,6 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 					members: {
 						AutoUpdateButton: null,
 						autoUpdateHandle: null,
-						buildingsToUpdate: null,
 
 						initialize: function () {
 
@@ -74,7 +73,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									//alert("Stopped auto-update");
 								} else {
 									//window.FlunikTools.Main.getInstance().startAutoUpdate("Silo,Command Center");
-									window.FlunikTools.Main.getInstance().startAutoUpdate("Construction Yard, Command Center, Defense HQ, Defense Facility, Barracks, Factory, Airfield, Accumulator, Silo, Refinery, Power Plant");
+									window.FlunikTools.Main.getInstance().startAutoUpdate();
 									AutoUpdateButton.setLabel("Flunik ON");
 									//alert("Started auto-update");
 								}
@@ -97,11 +96,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 							}
 						},
 
-						startAutoUpdate: function (_buildingsToUpdate) {
-							if (_buildingsToUpdate == 'undefined' || _buildingsToUpdate != null) {
-								_buildingsToUpdate == "Construction Yard, Command Center, Defense HQ, Defense Facility, Barracks, Factory, Airfield, Accumulator, Silo, Refinery, Power Plant";
-							}
-							this.buildingsToUpdate = _buildingsToUpdate;
+						startAutoUpdate: function () {
 							this.autoUpgrade();
 							this.autoUpdateHandle = window.setInterval(this.autoUpgrade, 60000);
 						},
@@ -120,6 +115,8 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								var lowestbuildinglevel = 999;
 								var lowestdefencelevel = 999;
 								var lowestoffencelevel = 999;
+								var lowestupgradabledefencelevel = 999;
+								var lowestupgradableoffencelevel = 999;
 								console.debug("FLUNIK: ----------- Analyzing city %d with level %d", cityname, baselvl);
 
 
@@ -138,18 +135,20 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 											unitId: unit.get_Id()
 									};
 
-
-									if (unitlvl<lowestoffencelevel && unit.CanUpgrade()) {
+									if (unitlvl<lowestoffencelevel) {
 										var lowestoffencelevel=unitlvl;
-										var lowestoffenceunit_obj=unit_obj;
+									}
+
+									if (unitlvl<lowestupgradableoffencelevel && unit.CanUpgrade()) {
+										var lowestupgradableoffencelevel=unitlvl;
+										var lowestupgradableoffenceunit_obj=unit_obj;
 									};
 								};
-								if (lowestoffencelevel==999) {
-									console.debug("FLUNIK: The offence units are maxed out at level: %d", unitlvl);
-									lowestoffencelevel=unitlvl;
+								if (lowestupgradableoffencelevel<999) {
+									console.debug("FLUNIK: Upgrading %d offence unit from level of: %d", unit, lowestupgradableoffencelevel);
+									ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestupgradableoffenceunit_obj, null, null, true);
 								} else {
-									console.debug("FLUNIK: Upgrading %d offence unit from level of: %d", unit, unitlvl);
-									ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestoffenceunit_obj, null, null, true);
+									console.debug("FLUNIK: No offence units are upgradable - lowest level: %d", lowestoffencelevel);
 								}
 
 								var defenceUnits = units.get_DefenseUnits();
@@ -161,17 +160,20 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 											unitId: unit.get_Id()
 									};
 
-									if (unitlvl<lowestdefencelevel && unit.CanUpgrade()) {
+									if (unitlvl<lowestdefencelevel) {
 										var lowestdefencelevel=unitlvl;
-										var lowestdefenceunit_obj=unit_obj;
+									}
+
+									if (unitlvl<lowestupgradabledefencelevel && unit.CanUpgrade()) {
+										var lowestupgradabldefencelevel=unitlvl;
+										var lowestupgradabldefenceunit_obj=unit_obj;
 									};
 								};
-								if (lowestdefencelevel==999) {
-									console.debug("FLUNIK: The defence units are maxed out at level: %d", unitlvl);
-									lowestdefencelevel=unitlvl;
+								if (lowestupgradabledefencelevel<999) {
+									console.debug("FLUNIK: Upgrading %d defence unit from level of: %d", unit, lowestupgradabldefencelevel);
+									ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestupgradabldefenceunit_obj, null, null, true);
 								} else {
-									console.debug("FLUNIK: Upgrading %d defence unit from level of: %d", unit, unitlvl);
-									ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestdefenceunit_obj, null, null, true);
+									console.debug("FLUNIK: No defence units are upgradable - lowest level: %d", lowestdefencelevel);
 								}
 
 								for (var nBuildings in buildings.d) {
