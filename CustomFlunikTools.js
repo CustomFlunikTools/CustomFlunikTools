@@ -180,6 +180,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								}
 
 								var CY=CC=DHQ=DF=SUPPORT=INF=VEH=AIR=lowestbuilding=null;
+								var infRT=vehRT=airRT=0;
 								
 								
 								for (var nBuildings in buildings.d) {
@@ -195,6 +196,11 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									};
 
 									//console.debug("The %d building has a level of: %d", name, buildinglvl);
+									if	(buildinglvl < lowestbuildinglevel && building.CanUpgrade())	{
+										var lowestbuildinglevel=buildinglvl;
+										var lowestbuilding=building;
+										var lowestbuildingname=name;
+									};
 
 									if 	(name == "Construction Yard") {
 										var CY=building;
@@ -219,23 +225,21 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									};            
 									if 	(name == "Barracks" || name == "Hand of Nod") {
 										var INF=building;
+										var infRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Infantry, false);
 										continue;
 									};            
 									if 	(name == "Factory" || name == "War Factory") {
 										var VEH=building;
+										var vehRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Vehicle, false);
 										continue;
 									};            
 									if 	(name == "Airfield" || name == "Airport") {
 										var AIR=building;
+										var airRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Aircraft, false);
 										continue;
 									}; 
 									
 									//console.debug("FLUNIK: The %d building has a level of: %d", name, buildinglvl);
-									if	(buildinglvl < lowestbuildinglevel && building.CanUpgrade())	{
-										var lowestbuildinglevel=buildinglvl;
-										var lowestbuilding=building;
-										var lowestbuildingname=name;
-									};
 								}; // for buildings 
 
 								// get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
@@ -250,18 +254,22 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 
 									if (crystalisfull) {
 										console.debug("FLUNIK: Crystal is full - checking if CC or DHQ upgrades is required");
-										if (CC != null && CC.get_CurrentLevel() == lowestoffencelevel && CC.CanUpgrade()) {
-											console.debug("FLUNIK: Crystal is full - Upgrading CC since offencelevel is maximum");
-											CC.Upgrade();
-											return;
-											continue;
+										if (CC != null) { 
+											if (CC.get_CurrentLevel() == lowestoffencelevel && CC.CanUpgrade()) {
+												console.debug("FLUNIK: Crystal is full - Upgrading CC since offencelevel is maximum");
+												CC.Upgrade();
+												return;
+												continue;
+											}
 										};
 
-										if (DHQ != null && DHQ.get_CurrentLevel() == lowestdefencelevel && DHQ.CanUpgrade()) {
-											console.debug("FLUNIK: Crystal is full - Upgrading DHQ since defencelevel is maximum");
-											DHQ.Upgrade();
-											return;
-											continue;
+										if (DHQ != null) { 
+											if (DHQ.get_CurrentLevel() == lowestdefencelevel && DHQ.CanUpgrade()) {
+												console.debug("FLUNIK: Crystal is full - Upgrading DHQ since defencelevel is maximum");
+												DHQ.Upgrade();
+												return;
+												continue;
+											}
 										};
 									} else {
 										console.debug("FLUNIK: Crystal is not full - Current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
@@ -271,86 +279,98 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									continue;
 								}
 								
-								if (CY != null && CY.get_CurrentLevel() < 25) {
-									if (CY.CanUpgrade()) {
-										console.debug("FLUNIK: The CY building level %d is lower than 25 - Upgrading", CY.get_CurrentLevel());
-										CY.Upgrade();
-										return;
-										continue;
-									} else {
-										console.debug("FLUNIK: The CY building level %d is lower than 25 but city is full - skipping to next", CY.get_CurrentLevel());
-									};
+								if (CY != null) { 
+									if (CY.get_CurrentLevel() < 25) {
+										if (CY.CanUpgrade()) {
+											console.debug("FLUNIK: The CY building level %d is lower than 25 - Upgrading", CY.get_CurrentLevel());
+											CY.Upgrade();
+											return;
+											continue;
+										} else {
+											console.debug("FLUNIK: The CY building level %d is lower than 25 but city is full - skipping to next", CY.get_CurrentLevel());
+										};
+									}
 								};
 
-								if (CC != null && CC.get_CurrentLevel() < baselvl) {
-									if (CC.CanUpgrade()) {
-										console.debug("FLUNIK: The CC building level %d is lower than base level %d - Upgrading", CC.get_CurrentLevel(), baselvl);
-										CC.Upgrade();
-										return;
-										continue;
-									} else {
-										console.debug("FLUNIK: The CC building level %d is lower than base level %d but city is full - skipping to next", CC.get_CurrentLevel(), baselvl);
-									};
+								if (CC != null) { 
+									if (CC.get_CurrentLevel() < baselvl) {
+										if (CC.CanUpgrade()) {
+											console.debug("FLUNIK: The CC building level %d is lower than base level %d - Upgrading", CC.get_CurrentLevel(), baselvl);
+											CC.Upgrade();
+											return;
+											continue;
+										} else {
+											console.debug("FLUNIK: The CC building level %d is lower than base level %d but city is full - skipping to next", CC.get_CurrentLevel(), baselvl);
+										};
+									}
 								};
 
-								if (CC != null && CC.get_CurrentLevel() == lowestoffencelevel) {
-									if (CC.CanUpgrade()) {
-										console.debug("FLUNIK: The CC building level %d matches lowest offence level %d - Upgrading", CC.get_CurrentLevel(), lowestoffencelevel);
-										CC.Upgrade();
-										return;
-										continue;
-									} else {
-										console.debug("FLUNIK: The CC building level %d matches lowest offence level %d but city is full - skipping to next", CC.get_CurrentLevel(), lowestoffencelevel);
-									};
+								if (CC != null) { 
+									if (CC.get_CurrentLevel() == lowestoffencelevel) {
+										if (CC.CanUpgrade()) {
+											console.debug("FLUNIK: The CC building level %d matches lowest offence level %d - Upgrading", CC.get_CurrentLevel(), lowestoffencelevel);
+											CC.Upgrade();
+											return;
+											continue;
+										} else {
+											console.debug("FLUNIK: The CC building level %d matches lowest offence level %d but city is full - skipping to next", CC.get_CurrentLevel(), lowestoffencelevel);
+										};
+									}
 								};
 
-								if (DHQ != null && DHQ.get_CurrentLevel() < baselvl) {
-									if (DHQ.CanUpgrade()) {
-										console.debug("FLUNIK: The DHQ building level %d is lower than base level %d - Upgrading", DHQ.get_CurrentLevel(), baselvl);
-										DHQ.Upgrade();
-										return;
-										continue;
-									} else {
-										console.debug("FLUNIK: The DHQ building level %d is lower than base level %d but city is full - skipping to next", DHQ.get_CurrentLevel(), baselvl);
-									};
+								if (DHQ != null) { 
+									if (DHQ.get_CurrentLevel() < baselvl) {
+										if (DHQ.CanUpgrade()) {
+											console.debug("FLUNIK: The DHQ building level %d is lower than base level %d - Upgrading", DHQ.get_CurrentLevel(), baselvl);
+											DHQ.Upgrade();
+											return;
+											continue;
+										} else {
+											console.debug("FLUNIK: The DHQ building level %d is lower than base level %d but city is full - skipping to next", DHQ.get_CurrentLevel(), baselvl);
+										};
+									}
 								};
 
-								if (DHQ != null && DHQ.get_CurrentLevel() == lowestdefencelevel) {
-									if (DHQ.CanUpgrade()) {
-										console.debug("FLUNIK: The DHQ building level %d matches lowest defence level %d - Upgrading", DHQ.get_CurrentLevel(), lowestoffencelevel);
-										DHQ.Upgrade();
-										return;
-										continue;
-									} else {
-										console.debug("FLUNIK: The DHQ building level %d matches lowest defence level %d but city is full - skipping to next", DHQ.get_CurrentLevel(), lowestoffencelevel);
-									};
+								if (DHQ != null) { 
+									if (DHQ.get_CurrentLevel() == lowestdefencelevel) {
+										if (DHQ.CanUpgrade()) {
+											console.debug("FLUNIK: The DHQ building level %d matches lowest defence level %d - Upgrading", DHQ.get_CurrentLevel(), lowestoffencelevel);
+											DHQ.Upgrade();
+											return;
+											continue;
+										} else {
+											console.debug("FLUNIK: The DHQ building level %d matches lowest defence level %d but city is full - skipping to next", DHQ.get_CurrentLevel(), lowestoffencelevel);
+										};
+									}
 								};
 
-								if (DF != null && DF.get_CurrentLevel() < DHQ.get_CurrentLevel()) {
-									if (DF.CanUpgrade()) {
-										console.debug("FLUNIK: The DF building level %d is lower than DHQ level %d - Upgrading", DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
-										DF.Upgrade();
-										return;
-										continue;
-									} else {
-										console.debug("FLUNIK: The DF building level %d is lower than DHQ level %d but city is full - skipping to next", DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
-									};
+								if (DF != null && DHQ != null) { 
+									if (DF.get_CurrentLevel() < DHQ.get_CurrentLevel()) {
+										if (DF.CanUpgrade()) {
+											console.debug("FLUNIK: The DF building level %d is lower than DHQ level %d - Upgrading", DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											DF.Upgrade();
+											return;
+											continue;
+										} else {
+											console.debug("FLUNIK: The DF building level %d is lower than DHQ level %d but city is full - skipping to next", DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
+										};
+									}
 								};
 
-								if (DF != null && SUPPORT.get_CurrentLevel() < DHQ.get_CurrentLevel()) {
-									if (DF.CanUpgrade()) {
-										console.debug("FLUNIK: The SUPPORT building level %d is lower than DHQ level %d - Upgrading", SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
-										SUPPORT.Upgrade();
-										return;
-										continue;
-									} else {
-										console.debug("FLUNIK: The SUPPORT building level %d is lower than DHQ level %d but city is full - skipping to next", SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
-									};
+								if (SUPPORT != null && DHQ != null) { 
+									if (SUPPORT.get_CurrentLevel() < DHQ.get_CurrentLevel()) {
+										if (SUPPORT.CanUpgrade()) {
+											console.debug("FLUNIK: The SUPPORT building level %d is lower than DHQ level %d - Upgrading", SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											SUPPORT.Upgrade();
+											return;
+											continue;
+										} else {
+											console.debug("FLUNIK: The SUPPORT building level %d is lower than DHQ level %d but city is full - skipping to next", SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
+										};
+									}
 								};
 
-								var airRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Aircraft, false);
-								var vehRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Vehicle, false);
-								var infRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Infantry, false);
+
 								var maxRT = Math.max(airRT,vehRT,infRT);
 								console.debug("FLUNIK: Support info in seconds: Max %d AIR %d VEH %d INF %d", maxRT, airRT, vehRT, infRT);
 								
@@ -392,12 +412,14 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									};
 								};
 
-								if (lowestbuilding != null && lowestbuilding.CanUpgrade()) {
-									console.debug("FLUNIK: Default upgrade - lowest building is %d level %d", lowestbuildingname, lowestbuildinglevel);
-									lowestbuilding.Upgrade();
-									return;
+								if (lowestbuilding != null) { 
+									if (lowestbuilding.CanUpgrade()) {
+										console.debug("FLUNIK: Default upgrade - lowest building is %d level %d", lowestbuildingname, lowestbuildinglevel);
+										lowestbuilding.Upgrade();
+										return;
+									}
 								}
-								
+
 							}; // for city
 						} // function autoupgrade
 					} // members
