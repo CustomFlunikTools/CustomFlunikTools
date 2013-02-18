@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130217e
+// @version     20130218a
 // ==/UserScript==
 
 /*
@@ -97,6 +97,11 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 						},
 
 						startAutoUpdate: function () {
+							
+							var _this = FlunikTools.Main.getInstance();
+							// and now you can just use - Thx KRS_L
+							//var tiberiumisfull = _this.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
+							
 							this.autoUpgrade();
 							this.autoUpdateHandle = window.setInterval(this.autoUpgrade, 60000);
 						},
@@ -119,7 +124,17 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								var lowestupgoffencelevel = 999;
 								console.debug("FLUNIK: ----------- Analyzing city %d with level %d", cityname, baselvl);
 
+								// get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
+								// or
+// broken on 2nd pass?			var tiberiumisfull = this.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
+								var tiberiumisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
+								var crystalisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
+//								console.debug("FLUNIK: Tiberium current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
+//								console.debug("FLUNIK: Crystal current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
 
+								var currenttibpct = Math.round(100*city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium)/city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium))/100 ;
+								var currentcrypct = Math.round(100*city.GetResourceCount(ClientLib.Base.EResourceType.Crystal)/city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal))/100 ;
+								
 								//get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
 
 								// or
@@ -242,13 +257,6 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									//console.debug("FLUNIK: The %d building has a level of: %d", name, buildinglvl);
 								}; // for buildings 
 
-								// get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
-								// or
-// broken on 2nd pass?			var tiberiumisfull = this.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
-								var tiberiumisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
-								var crystalisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
-//								console.debug("FLUNIK: Tiberium current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
-//								console.debug("FLUNIK: Crystal current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
 								
 								if (!tiberiumisfull) {
 
@@ -270,10 +278,10 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 											}
 										};
 									} else {
-										console.debug("FLUNIK: Crystal is not full - Current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
+										console.debug("FLUNIK: Crystal is less than 80% full - Current %d",currentcrypct);
 									}
 									
-									console.debug("FLUNIK: Tiberium is not full - waiting for full - Current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
+									console.debug("FLUNIK: Tiberium is less than 80% full - Current %d",currenttibpct);
 									continue;
 								}
 								
