@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130217c
+// @version     20130217d
 // ==/UserScript==
 
 /*
@@ -143,7 +143,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										var lowestupgoffencelevel=unitlvl;
 										var lowestupgoffenceunit_obj=unit_obj;
 									};
-									console.debug("FLUNIK: OFFENCE - unitlvl: %d lowest: %d lowestupg: %d", unitlvl,lowestoffencelevel,lowestupgoffencelevel);
+									//console.debug("FLUNIK: OFFENCE - unitlvl: %d lowest: %d lowestupg: %d", unitlvl,lowestoffencelevel,lowestupgoffencelevel);
 								};
 								if (lowestupgoffencelevel<999) {
 									console.debug("FLUNIK: Upgrading %d offence unit from level of: %d", unit, lowestupgoffencelevel);
@@ -169,7 +169,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										var lowestupgdefencelevel=unitlvl;
 										var lowestupgdefenceunit_obj=unit_obj;
 									};
-									console.debug("FLUNIK: DEFENCE - unitlvl: %d lowest: %d lowestupg: %d", unitlvl,lowestdefencelevel,lowestupgdefencelevel);
+									//console.debug("FLUNIK: DEFENCE - unitlvl: %d lowest: %d lowestupg: %d", unitlvl,lowestdefencelevel,lowestupgdefencelevel);
 
 								};
 								if (lowestupgdefencelevel<999) {
