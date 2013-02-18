@@ -243,15 +243,15 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								if (!tiberiumisfull) {
 
 									if (crystalisfull) {
-										console.debug("FLUNIK: Crystal is full - attempting CC and DHQ upgrades if useful");
-										if (CC.get_CurrentLevel() == lowestoffencelevel && crystalisfull && CC.CanUpgrade()) {
+										console.debug("FLUNIK: Crystal is full - checking if CC or DHQ upgrades is required");
+										if (CC.get_CurrentLevel() == lowestoffencelevel && CC.CanUpgrade()) {
 											console.debug("FLUNIK: Crystal is full - Upgrading CC since offencelevel is maximum");
 											CC.Upgrade();
 											return;
 											continue;
 										};
 
-										if (DHQ.get_CurrentLevel() == lowestdefencelevel && crystalisfull && DHQ.CanUpgrade()) {
+										if (DHQ.get_CurrentLevel() == lowestdefencelevel && DHQ.CanUpgrade()) {
 											console.debug("FLUNIK: Crystal is full - Upgrading DHQ since defencelevel is maximum");
 											DHQ.Upgrade();
 											return;
