@@ -143,6 +143,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										var lowestupgradableoffencelevel=unitlvl;
 										var lowestupgradableoffenceunit_obj=unit_obj;
 									};
+									console.debug("FLUNIK: OFFENCE - unitlvl: %d lowest: %d lowestupg: %d", unitlvl,lowestoffencelevel,lowestupgradableoffencelevel);
 								};
 								if (lowestupgradableoffencelevel<999) {
 									console.debug("FLUNIK: Upgrading %d offence unit from level of: %d", unit, lowestupgradableoffencelevel);
@@ -164,12 +165,14 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										var lowestdefencelevel=unitlvl;
 									}
 
-									if (unitlvl<lowestupgradabledefencelevel && unit.CanUpgrade()) {
+									if (unitlvl < lowestupgradabledefencelevel && unit.CanUpgrade()) {
 										var lowestupgradabldefencelevel=unitlvl;
 										var lowestupgradabldefenceunit_obj=unit_obj;
 									};
+									console.debug("FLUNIK: DEFENCE - unitlvl: %d lowest: %d lowestupg: %d", unitlvl,lowestdefencelevel,lowestupgradabldefencelevel);
+
 								};
-								if (lowestupgradabledefencelevel<999) {
+								if (lowestupgradabldefencelevel<999) {
 									console.debug("FLUNIK: Upgrading %d defence unit from level of: %d", unit, lowestupgradabldefencelevel);
 									ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestupgradabldefenceunit_obj, null, null, true);
 								} else {
