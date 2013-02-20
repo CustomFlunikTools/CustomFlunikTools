@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130219b
+// @version     20130220a
 // ==/UserScript==
 
 /*
@@ -175,7 +175,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									//console.debug("FLUNIK: OFFENCE - unitlvl: %d lowest: %d lowestupg: %d", unitlvl,lowestoffencelevel,lowestupgoffencelevel);
 								};
 								if (lowestupgoffencelevel<999) {
-									console.debug("FLUNIK: %d Upgrading %d offence unit from level of: %d",cityname, unit, lowestupgoffencelevel);
+						//			console.debug("FLUNIK: %d Upgrading %d offence unit from level of: %d",cityname, unit, lowestupgoffencelevel);
 									ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestupgoffenceunit_obj, null, null, true);
 						//		} else {
 						//			console.debug("FLUNIK: No offence units are upgradable - lowest level: %d", lowestoffencelevel);
@@ -202,7 +202,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 
 								};
 								if (lowestupgdefencelevel<999) {
-									console.debug("FLUNIK: %d Upgrading %d defence unit from level of: %d",cityname, unit, lowestupgdefencelevel);
+						//			console.debug("FLUNIK: %d Upgrading %d defence unit from level of: %d",cityname, unit, lowestupgdefencelevel);
 									ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestupgdefenceunit_obj, null, null, true);
 						//		} else {
 						//			console.debug("FLUNIK: No defence units are upgradable - lowest level: %d", lowestdefencelevel);
@@ -391,47 +391,41 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									}
 								};
 
-
 								var maxRT = Math.max(airRT,vehRT,infRT);
-								console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
+
+								switch (maxRT) {
+								case airRT:
+									// Air has highest RT
+									var REPAIR=AIR;
+									var repairname="airport";
+									break;
+								case vehRT:
+									// Vehicle has highest RT
+									var REPAIR=VEH;
+									var repairname="vehicle";
+									break;
+								case infRT:
+									// Infantry has highest RT
+									var REPAIR=INF;
+									var repairname="infantry";
+									break;
+								};
 								
-								if (maxRT>14400) { // No point upgrading unless RT > 4 hours (14400 seconds)
-									switch (maxRT) {
-									case airRT:
-										// Air has highest RT
-										if (AIR.CanUpgrade()) {
-											console.debug("FLUNIK: %d The Airport level %d has repair time of %d - Upgrading",cityname, AIR.get_CurrentLevel(), airRT);
-											AIR.Upgrade();
+								if (REPAIR != null && CC != null) {
+									if (maxRT>14400 && REPAIR.get_CurrentLevel()<CC.get_CurrentLevel()) { // No point upgrading unless RT > 4 hours (14400 seconds)
+										console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
+										if (REPAIR.CanUpgrade()) {
+											console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											REPAIR.Upgrade();
 											return;
 										} else {
-											console.debug("FLUNIK: %d The Airport level %d has repair time %d but city is full - skipping to next",cityname, AIR.get_CurrentLevel(), airRT);
+											console.debug("FLUNIK: %d The %d level %d has repair time %d but city is full - skipping to next",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
 										};
-										break;
-									case vehRT:
-										// Vehicle has highest RT
-										if (VEH.CanUpgrade()) {
-											console.debug("FLUNIK: %d The Vehicle level %d has repair time of %d - Upgrading",cityname, VEH.get_CurrentLevel(), vehRT);
-											VEH.Upgrade();
-											return;
-										} else {
-											console.debug("FLUNIK: %d The Vehicle level %d has repair time %d but city is full - skipping to next",cityname, VEH.get_CurrentLevel(), vehRT);
-										};
-										break;
-									case infRT:
-										// Infantry has highest RT
-										if (INF.CanUpgrade()) {
-											console.debug("FLUNIK: %d The Infantry level %d has repair time of %d - Upgrading",cityname, INF.get_CurrentLevel(), infRT);
-											INF.Upgrade();
-											return;
-										} else {
-											console.debug("FLUNIK: %d The Infantry level %d has repair time %d but city is full - skipping to next",cityname, INF.get_CurrentLevel(), infRT);
-										};
-										break;
 									};
 								};
 
 								if (lowestbuilding != null) { 
-									if (lowestbuilding.CanUpgrade() & currenttibpct<50) {
+									if (lowestbuilding.CanUpgrade() && currenttibpct>80) {
 										console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
 										lowestbuilding.Upgrade();
 										return;
