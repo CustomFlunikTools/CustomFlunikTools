@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130220a
+// @version     20130220b
 // ==/UserScript==
 
 /*
@@ -431,8 +431,8 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									var repairname="infantry";
 									break;
 								};
-								console.debug("FLUNIK: %d The %d level is %d has repair time of %d",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
-								console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
+								//console.debug("FLUNIK: %d The %d level is %d has repair time of %d",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+								//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
 								
 								if (REPAIR != null && CC != null) {
 									if (maxRT>14400 && REPAIR.get_CurrentLevel()<CC.get_CurrentLevel()) { // No point upgrading unless RT > 4 hours (14400 seconds)
