@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130218a
+// @version     20130219b
 // ==/UserScript==
 
 /*
@@ -122,18 +122,32 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								var lowestoffencelevel = 999;
 								var lowestupgdefencelevel = 999;
 								var lowestupgoffencelevel = 999;
-								console.debug("FLUNIK: ----------- Analyzing city %d with level %d", cityname, baselvl);
+					//			console.debug("FLUNIK: ----------- Analyzing city %d with level %d", cityname, baselvl);
 
 								// get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
 								// or
 // broken on 2nd pass?			var tiberiumisfull = this.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
-								var tiberiumisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
-								var crystalisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
+//								var tiberiumisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
+//								var crystalisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
 //								console.debug("FLUNIK: Tiberium current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
 //								console.debug("FLUNIK: Crystal current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
 
 								var currenttibpct = Math.round(10000*city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium)/city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium))/100 ;
 								var currentcrypct = Math.round(10000*city.GetResourceCount(ClientLib.Base.EResourceType.Crystal)/city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal))/100 ;
+								//console.debug("FLUNIK: Crystal is %d",currentcrypct);
+								//console.debug("FLUNIK: Tiberium is %d",currenttibpct);
+								
+								if (currenttibpct<25) {
+									var tiberiumisfull=false;
+								} else {
+									var tiberiumisfull=true;
+								}
+								if (currentcrypct<80) {
+									var crystalisfull=false;
+								} else {
+									var crystalisfull=true;
+									var tiberiumisfull=false; // setting to not full so it will be held on to until we can upg CC or DHQ
+								}
 								
 								//get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
 
@@ -257,6 +271,14 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									//console.debug("FLUNIK: The %d building has a level of: %d", name, buildinglvl);
 								}; // for buildings 
 
+/*								if (lowestbuilding != null) { 
+									if (lowestbuildinglevel<(baselvl*0.66)) {
+										console.debug("FLUNIK: %d new building upgrade - %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
+										lowestbuilding.Upgrade();
+										return;
+									}
+								}
+*/
 								
 								if (!tiberiumisfull) {
 
@@ -336,7 +358,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								if (DHQ != null) { 
 									if (DHQ.get_CurrentLevel() == lowestdefencelevel) {
 										if (DHQ.CanUpgrade()) {
-											console.debug("FLUNIK: %d The DHQ building level %d matches lowest defence level %d - Upgrading",cityname, DHQ.get_CurrentLevel(), lowestoffencelevel);
+											console.debug("FLUNIK: %d The DHQ building level %d matches lowest defence level %d - Upgrading",cityname, DHQ.get_CurrentLevel(), lowestdefencelevel);
 											DHQ.Upgrade();
 											return;
 										} else {
@@ -371,7 +393,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 
 
 								var maxRT = Math.max(airRT,vehRT,infRT);
-								console.debug("FLUNIK: %d Support info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
+								console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
 								
 								if (maxRT>14400) { // No point upgrading unless RT > 4 hours (14400 seconds)
 									switch (maxRT) {
@@ -409,7 +431,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								};
 
 								if (lowestbuilding != null) { 
-									if (lowestbuilding.CanUpgrade()) {
+									if (lowestbuilding.CanUpgrade() & currenttibpct<50) {
 										console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
 										lowestbuilding.Upgrade();
 										return;
