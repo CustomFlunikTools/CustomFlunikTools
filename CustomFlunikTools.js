@@ -116,6 +116,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								var city = ClientLib.Data.MainData.GetInstance().get_Cities().get_AllCities().d[nCity];
 								var cityname = city.get_Name();
 								var baselvl = city.get_LvlBase();
+								//var player = city.get_PlayerName();
 								var buildings = city.get_Buildings();
 								var lowestbuildinglevel = 999;
 								var lowestdefencelevel = 999;
@@ -154,6 +155,8 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								// or
 								// get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
 
+								var upgradeinfo = "FLUNIK: "+cityname;
+								
 								var units = city.get_CityUnitsData();
 								var offenceUnits = units.get_OffenseUnits();
 								for (var nUnit in offenceUnits.d) {
@@ -171,11 +174,13 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (unitlvl<lowestupgoffencelevel && unit.CanUpgrade()) {
 										var lowestupgoffencelevel=unitlvl;
 										var lowestupgoffenceunit_obj=unit_obj;
+										var unitname = unit.get_UnitGameData_Obj().dn;
 									};
 									//console.debug("FLUNIK: OFFENCE - unitlvl: %d lowest: %d lowestupg: %d", unitlvl,lowestoffencelevel,lowestupgoffencelevel);
 								};
 								if (lowestupgoffencelevel<999) {
-						//			console.debug("FLUNIK: %d Upgrading %d offence unit from level of: %d",cityname, unit, lowestupgoffencelevel);
+									var upgradeinfo = upgradeinfo+" - O: "+unitname+" "+lowestupgoffencelevel;
+						//			var upgradeinfo = "FLUNIK: %d Upgrading %d offence unit from level of: %d",cityname, unitname, lowestupgoffencelevel);
 									ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestupgoffenceunit_obj, null, null, true);
 						//		} else {
 						//			console.debug("FLUNIK: No offence units are upgradable - lowest level: %d", lowestoffencelevel);
@@ -197,17 +202,22 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (unitlvl < lowestupgdefencelevel && unit.CanUpgrade()) {
 										var lowestupgdefencelevel=unitlvl;
 										var lowestupgdefenceunit_obj=unit_obj;
+										var unitname = unit.get_UnitGameData_Obj().dn;
 									};
 									//console.debug("FLUNIK: DEFENCE - unitlvl: %d lowest: %d lowestupg: %d", unitlvl,lowestdefencelevel,lowestupgdefencelevel);
 
 								};
 								if (lowestupgdefencelevel<999) {
-						//			console.debug("FLUNIK: %d Upgrading %d defence unit from level of: %d",cityname, unit, lowestupgdefencelevel);
+									var upgradeinfo = upgradeinfo+" - D: "+unitname+" "+lowestupgdefencelevel;
+						//			console.debug("FLUNIK: %d Upgrading %d defence unit from level of: %d",cityname, unitname, lowestupgdefencelevel);
 									ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestupgdefenceunit_obj, null, null, true);
 						//		} else {
 						//			console.debug("FLUNIK: No defence units are upgradable - lowest level: %d", lowestdefencelevel);
 								}
 
+								if (lowestupgoffencelevel<999 || lowestupgdefencelevel<999) {
+									console.debug(upgradeinfo);
+								}
 								var CY=CC=DHQ=DF=SUPPORT=INF=VEH=AIR=lowestbuilding=null;
 								var infRT=vehRT=airRT=0;
 								
