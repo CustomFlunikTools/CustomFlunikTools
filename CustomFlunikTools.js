@@ -154,6 +154,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								// or
 								// get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
 
+								var unitcanupgrade = false;
 								var units = city.get_CityUnitsData();
 								var offenceUnits = units.get_OffenseUnits();
 								for (var nUnit in offenceUnits.d) {
@@ -177,10 +178,12 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								if (lowestupgoffencelevel<999) {
 						//			console.debug("FLUNIK: %d Upgrading %d offence unit from level of: %d",cityname, unit, lowestupgoffencelevel);
 									ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestupgoffenceunit_obj, null, null, true);
+									var unitcanupgrade = true;
 						//		} else {
 						//			console.debug("FLUNIK: No offence units are upgradable - lowest level: %d", lowestoffencelevel);
 								}
 
+								
 								var defenceUnits = units.get_DefenseUnits();
 								for (var nUnit in defenceUnits.d) {
 									var unit = defenceUnits.d[nUnit];
@@ -204,6 +207,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								if (lowestupgdefencelevel<999) {
 						//			console.debug("FLUNIK: %d Upgrading %d defence unit from level of: %d",cityname, unit, lowestupgdefencelevel);
 									ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestupgdefenceunit_obj, null, null, true);
+									var unitcanupgrade = true;
 						//		} else {
 						//			console.debug("FLUNIK: No defence units are upgradable - lowest level: %d", lowestdefencelevel);
 								}
@@ -281,7 +285,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 */
 								
 
-								if (currentcrypct>80) {
+								if (currentcrypct>80 && !unitcanupgrade) {
 									//			console.debug("FLUNIK: Crystal is full - checking if CC or DHQ upgrades is required");
 									var tryDHQ=true;
 									if (CC != null) {
@@ -451,7 +455,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								};
 
 								if (lowestbuilding != null) { 
-									if (lowestbuilding.CanUpgrade() && currenttibpct>80) {
+									if (lowestbuilding.CanUpgrade() && currenttibpct>10) {
 										console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
 										lowestbuilding.Upgrade();
 										return;
