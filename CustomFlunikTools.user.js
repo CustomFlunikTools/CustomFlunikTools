@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130221a
+// @version     20130222a
 // ==/UserScript==
 
 /*
@@ -375,7 +375,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									var tryDHQ=true;
 									if (CC != null) {
 										var tryDHQ=false;
-										if (CC.get_CurrentLevel()>DHQ.get_CurrentLevel()) {
+										if (CC.get_CurrentLevel()>(DHQ.get_CurrentLevel()+1)) {
 											var tryDHQ=true;
 										}
 									}
