@@ -351,7 +351,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 
 								if (DHQ != null) {
 									// Upgrade DHQ if it is lower level than the CC and defence level is maxed
-									ver DHQTEST=true;
+									var DHQTEST=true;
 									if (CC != null) {
 										var DHQTEST=false;
 										if (CC.get_CurrentLevel()>DHQ.get_CurrentLevel()) {
