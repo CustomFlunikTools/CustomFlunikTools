@@ -140,22 +140,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								//console.debug("FLUNIK: Crystal is %d",currentcrypct);
 								//console.debug("FLUNIK: Tiberium is %d",currenttibpct);
 								
-								if (currenttibpct<25) {
-									var tiberiumisfull=false;
-								} else {
-									var tiberiumisfull=true;
-								}
-								if (currentcrypct<80) {
-									var crystalisfull=false;
-								} else {
-									var crystalisfull=true;
-									var tiberiumisfull=false; // setting to not full so it will be held on to until we can upg CC or DHQ
-								}
 								
-								//get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
-
-								// or
-								// get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
 
 								var upgradeinfo = "FLUNIK: "+cityname;
 								
@@ -364,23 +349,17 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									}
 								};
 
-								if (DHQ != null) { 
-									if (DHQ.get_CurrentLevel() < baselvl) {
-										if (DHQ.CanUpgrade()) {
-											console.debug("FLUNIK: %d The DHQ building level %d is lower than base level %d - Upgrading",cityname, DHQ.get_CurrentLevel(), baselvl);
-											DHQ.Upgrade();
-											return;
-										} else {
-											console.debug("FLUNIK: %d The DHQ building level %d is lower than base level %d but cant upgrade - skipping to next",cityname, DHQ.get_CurrentLevel(), baselvl);
-											if (currenttibpct<80) { 
-												continue; 
-											}
-										};
+								if (DHQ != null) {
+									// Upgrade DHQ if it is lower level than the CC and defence level is maxed
+									ver DHQTEST=true;
+									if (CC != null) {
+										var DHQTEST=false;
+										if (CC.get_CurrentLevel()>DHQ.get_CurrentLevel()) {
+											var DHQTEST=true;
+										}
 									}
-								};
 
-								if (DHQ != null) { 
-									if (DHQ.get_CurrentLevel() == lowestdefencelevel) {
+									if (DHQ.get_CurrentLevel() == lowestdefencelevel && DHQTEST) {
 										if (DHQ.CanUpgrade()) {
 											console.debug("FLUNIK: %d The DHQ building level %d matches lowest defence level %d - Upgrading",cityname, DHQ.get_CurrentLevel(), lowestdefencelevel);
 											DHQ.Upgrade();
