@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130220b
+// @version     20130221a
 // ==/UserScript==
 
 /*
@@ -19,6 +19,8 @@ As far as buildings go, first off I try to keep the base at maximum capacity sin
 opportunity to use the resources in ways we see fit. This script will kick in when Tiberium
 is full to upgrade the best building it can. It will also try to upgrade the CC or DHQ any time
 the offence or defence units have maxed out.
+
+Need to come up with rules for harvester/silo/power ideally..
 
 Here is the basic logic for building upgrades:  
 If CY is less than level 25 upgrade CY (max build sites in base)
