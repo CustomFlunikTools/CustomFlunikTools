@@ -268,6 +268,27 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									//console.debug("FLUNIK: The %d building has a level of: %d", name, buildinglvl);
 								}; // for buildings 
 
+								var maxRT = Math.max(airRT,vehRT,infRT);
+								switch (maxRT) {
+								case airRT:
+									// Air has highest RT
+									var REPAIR=AIR;
+									var repairname="airport";
+									break;
+								case vehRT:
+									// Vehicle has highest RT
+									var REPAIR=VEH;
+									var repairname="vehicle";
+									break;
+								case infRT:
+									// Infantry has highest RT
+									var REPAIR=INF;
+									var repairname="infantry";
+									break;
+								};
+								//console.debug("FLUNIK: %d The %d level is %d has repair time of %d",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+								//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
+
 /*								if (lowestbuilding != null) { 
 									if (lowestbuildinglevel<(baselvl*0.66)) {
 										console.debug("FLUNIK: %d new building upgrade - %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
@@ -351,15 +372,15 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 
 								if (DHQ != null) {
 									// Upgrade DHQ if it is lower level than the CC and defence level is maxed
-									var DHQTEST=true;
+									var tryDHQ=true;
 									if (CC != null) {
-										var DHQTEST=false;
+										var tryDHQ=false;
 										if (CC.get_CurrentLevel()>DHQ.get_CurrentLevel()) {
-											var DHQTEST=true;
+											var tryDHQ=true;
 										}
 									}
 
-									if (DHQ.get_CurrentLevel() == lowestdefencelevel && DHQTEST) {
+									if (DHQ.get_CurrentLevel() == lowestdefencelevel && tryDHQ) {
 										if (DHQ.CanUpgrade()) {
 											console.debug("FLUNIK: %d The DHQ building level %d matches lowest defence level %d - Upgrading",cityname, DHQ.get_CurrentLevel(), lowestdefencelevel);
 											DHQ.Upgrade();
@@ -403,27 +424,6 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									}
 								};
 
-								var maxRT = Math.max(airRT,vehRT,infRT);
-
-								switch (maxRT) {
-								case airRT:
-									// Air has highest RT
-									var REPAIR=AIR;
-									var repairname="airport";
-									break;
-								case vehRT:
-									// Vehicle has highest RT
-									var REPAIR=VEH;
-									var repairname="vehicle";
-									break;
-								case infRT:
-									// Infantry has highest RT
-									var REPAIR=INF;
-									var repairname="infantry";
-									break;
-								};
-								//console.debug("FLUNIK: %d The %d level is %d has repair time of %d",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
-								//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
 								
 								if (REPAIR != null && CC != null) {
 									if (maxRT>14400 && REPAIR.get_CurrentLevel()<CC.get_CurrentLevel()) { // No point upgrading unless RT > 4 hours (14400 seconds)
