@@ -206,8 +206,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 							//		console.debug(upgradeinfo);
 								//}
 								var CY=CC=DHQ=DF=SUPPORT=INF=VEH=AIR=lowestbuilding=null;
-								var infRT=vehRT=airRT=0;
-								
+								var infRT=vehRT=airRT=numPOW=numREF=0;
 								
 								for (var nBuildings in buildings.d) {
 									var building = buildings.d[nBuildings];
@@ -264,10 +263,30 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										var airRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Aircraft, false);
 										continue;
 									}; 
+									if 	(name == "Refinery") {
+										var numREF=numREF+1;
+										continue;
+									}; 
+									if 	(name == "Silo") {
+										continue;
+									}; 
+									if 	(name == "Harvester") {
+										continue;
+									}; 
+									if 	(name == "Power Plant") {
+										continue;
+									}; 
+									if 	(name == "Accumulator") {
+										continue;
+									}; 
 									
-									//console.debug("FLUNIK: The %d building has a level of: %d", name, buildinglvl);
+									console.debug("FLUNIK: You should NEVER see this - If you do the name of the building is: %d and is level: %d", name, buildinglvl);
 								}; // for buildings 
 
+//								FLUNIK: The Harvester building has a level of: 15 (program):234
+//								FLUNIK: The Power Plant building has a level of: 15 (program):234
+//								FLUNIK: The Silo building has a level of: 15 (program):234
+								
 								var maxRT = Math.max(airRT,vehRT,infRT);
 								switch (maxRT) {
 								case airRT:
@@ -385,7 +404,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									var tryDHQ=true;
 									if (CC != null) {
 										var tryDHQ=false;
-										if (CC.get_CurrentLevel()>(DHQ.get_CurrentLevel()+1)) {
+										if (CC.get_CurrentLevel()>(DHQ.get_CurrentLevel()+2)) {
 											var tryDHQ=true;
 										}
 									}
