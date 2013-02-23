@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130222a
+// @version     20130223a
 // ==/UserScript==
 
 /*
@@ -105,7 +105,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 							//var tiberiumisfull = _this.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
 							
 							this.autoUpgrade();
-							this.autoUpdateHandle = window.setInterval(this.autoUpgrade, 60000);
+							this.autoUpdateHandle = window.setInterval(this.autoUpgrade, 10000);
 						},
 						
 						stopAutoUpdate: function () {
