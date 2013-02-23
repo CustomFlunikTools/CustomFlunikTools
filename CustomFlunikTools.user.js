@@ -202,9 +202,9 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 						//			console.debug("FLUNIK: No defence units are upgradable - lowest level: %d", lowestdefencelevel);
 								}
 
-								if (lowestupgoffencelevel<999 || lowestupgdefencelevel<999) {
-									console.debug(upgradeinfo);
-								}
+								//if (lowestupgoffencelevel<999 || lowestupgdefencelevel<999) {
+							//		console.debug(upgradeinfo);
+								//}
 								var CY=CC=DHQ=DF=SUPPORT=INF=VEH=AIR=lowestbuilding=null;
 								var infRT=vehRT=airRT=0;
 								
@@ -298,6 +298,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								}
 */
 								
+								var SKIPS="";
 
 								if (currentcrypct>80) {
 									//			console.debug("FLUNIK: Crystal is full - checking if CC or DHQ upgrades is required");
@@ -306,7 +307,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										var tryDHQ=false;
 										if (CC.get_CurrentLevel() == lowestoffencelevel) {
 											if (CC.CanUpgrade()) {
-												console.debug("FLUNIK: %d Crystal is full - Upgrading CC since offencelevel is maximum",cityname);
+												console.debug(upgradeinfo+" - Crystal is full - Upgrading CC since offencelevel is maximum");
 												CC.Upgrade();
 												return;
 											} else {
@@ -318,7 +319,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									// tryDHQ will only be true if CC exists, offence level is maxed and CC unable to upgrade
 									if (DHQ != null && tryDHQ) { 
 										if (DHQ.get_CurrentLevel() == lowestdefencelevel && DHQ.CanUpgrade()) {
-											console.debug("FLUNIK: %d Crystal is full - Upgrading DHQ since defencelevel is maximum",cityname);
+											console.debug(upgradeinfo+" - Crystal is full - Upgrading DHQ since defencelevel is maximum");
 											DHQ.Upgrade();
 											return;
 										}
@@ -328,12 +329,15 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								if (CY != null) { 
 									if (CY.get_CurrentLevel() < 25) {
 										if (CY.CanUpgrade()) {
-											console.debug("FLUNIK: %d The CY building level %d is lower than 25 - Upgrading",cityname, CY.get_CurrentLevel());
+											//console.debug("FLUNIK: %d The CY building level %d is lower than 25 - Upgrading",cityname, CY.get_CurrentLevel());
+											console.debug(upgradeinfo+" - Skipped: "+SKIPS+" - Upg: CY");
 											CY.Upgrade();
 											return;
 										} else {
-											console.debug("FLUNIK: %d The CY building level %d is lower than 25 but cant upgrade - skipping to next",cityname, CY.get_CurrentLevel());
+											var SKIPS=SKIPS+"CY,";
+											//console.debug("FLUNIK: %d The CY building level %d is lower than 25 but cant upgrade - skipping to next",cityname, CY.get_CurrentLevel());
 											if (currenttibpct<80) { 
+												console.debug(upgradeinfo+" - Skipped: "+SKIPS)
 												continue; 
 											}
 										};
@@ -344,11 +348,14 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (CC.get_CurrentLevel() < baselvl) {
 										if (CC.CanUpgrade()) {
 											console.debug("FLUNIK: %d The CC building level %d is lower than base level %d - Upgrading",cityname, CC.get_CurrentLevel(), baselvl);
+											console.debug(upgradeinfo+" - Skipped: "+SKIPS+" - Upg: CC");
 											CC.Upgrade();
 											return;
 										} else {
-											console.debug("FLUNIK: %d The CC building level %d is lower than base level %d but cant upgrade - skipping to next",cityname, CC.get_CurrentLevel(), baselvl);
+											var SKIPS=SKIPS+"CC,";
+											//console.debug("FLUNIK: %d The CC building level %d is lower than base level %d but cant upgrade - skipping to next",cityname, CC.get_CurrentLevel(), baselvl);
 											if (currenttibpct<80) { 
+												console.debug(upgradeinfo+" - Skipped: "+SKIPS)
 												continue; 
 											}
 										};
@@ -358,12 +365,15 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								if (CC != null) { 
 									if (CC.get_CurrentLevel() == lowestoffencelevel) {
 										if (CC.CanUpgrade()) {
-											console.debug("FLUNIK: %d The CC building level %d matches lowest offence level %d - Upgrading",cityname, CC.get_CurrentLevel(), lowestoffencelevel);
+											//console.debug("FLUNIK: %d The CC building level %d matches lowest offence level %d - Upgrading",cityname, CC.get_CurrentLevel(), lowestoffencelevel);
+											console.debug(upgradeinfo+" - Skipped: "+SKIPS+" - Upg: CC");
 											CC.Upgrade();
 											return;
 										} else {
-											console.debug("FLUNIK: %d The CC building level %d matches lowest offence level %d but cant upgrade - skipping to next",cityname, CC.get_CurrentLevel(), lowestoffencelevel);
+											var SKIPS=SKIPS+"CC,";
+											//console.debug("FLUNIK: %d The CC building level %d matches lowest offence level %d but cant upgrade - skipping to next",cityname, CC.get_CurrentLevel(), lowestoffencelevel);
 											if (currenttibpct<80) { 
+												console.debug(upgradeinfo+" - Skipped: "+SKIPS)
 												continue; 
 											}
 										};
@@ -382,12 +392,15 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 
 									if (DHQ.get_CurrentLevel() == lowestdefencelevel && tryDHQ) {
 										if (DHQ.CanUpgrade()) {
-											console.debug("FLUNIK: %d The DHQ building level %d matches lowest defence level %d - Upgrading",cityname, DHQ.get_CurrentLevel(), lowestdefencelevel);
+											//console.debug("FLUNIK: %d The DHQ building level %d matches lowest defence level %d - Upgrading",cityname, DHQ.get_CurrentLevel(), lowestdefencelevel);
+											console.debug(upgradeinfo+" - Skipped: "+SKIPS+" - Upg: DHQ");
 											DHQ.Upgrade();
 											return;
 										} else {
-											console.debug("FLUNIK: %d The DHQ building level %d matches lowest defence level %d but cant upgrade - skipping to next",cityname, DHQ.get_CurrentLevel(), lowestoffencelevel);
+											var SKIPS=SKIPS+"DHQ,";
+											//console.debug("FLUNIK: %d The DHQ building level %d matches lowest defence level %d but cant upgrade - skipping to next",cityname, DHQ.get_CurrentLevel(), lowestoffencelevel);
 											if (currenttibpct<80) { 
+												console.debug(upgradeinfo+" - Skipped: "+SKIPS)
 												continue; 
 											}
 										};
@@ -397,12 +410,15 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								if (DF != null && DHQ != null) { 
 									if (DF.get_CurrentLevel() < DHQ.get_CurrentLevel()) {
 										if (DF.CanUpgrade()) {
-											console.debug("FLUNIK: %d The DF building level %d is lower than DHQ level %d - Upgrading",cityname, DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											//console.debug("FLUNIK: %d The DF building level %d is lower than DHQ level %d - Upgrading",cityname, DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											console.debug(upgradeinfo+" - Skipped: "+SKIPS+" - Upg: DF");
 											DF.Upgrade();
 											return;
 										} else {
-											console.debug("FLUNIK: %d The DF building level %d is lower than DHQ level %d but cant upgrade - skipping to next",cityname, DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											var SKIPS=SKIPS+"DF,";
+											//console.debug("FLUNIK: %d The DF building level %d is lower than DHQ level %d but cant upgrade - skipping to next",cityname, DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
 											if (currenttibpct<80) { 
+												console.debug(upgradeinfo+" - Skipped: "+SKIPS)
 												continue; 
 											}
 										};
@@ -412,12 +428,15 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								if (SUPPORT != null && DHQ != null) { 
 									if (SUPPORT.get_CurrentLevel() < DHQ.get_CurrentLevel()) {
 										if (SUPPORT.CanUpgrade()) {
-											console.debug("FLUNIK: %d The SUPPORT building level %d is lower than DHQ level %d - Upgrading",cityname, SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											//console.debug("FLUNIK: %d The SUPPORT building level %d is lower than DHQ level %d - Upgrading",cityname, SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											console.debug(upgradeinfo+" - Skipped: "+SKIPS+" - Upg: SUPPORT");
 											SUPPORT.Upgrade();
 											return;
 										} else {
-											console.debug("FLUNIK: %d The SUPPORT building level %d is lower than DHQ level %d but cant upgrade - skipping to next",cityname, SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											var SKIPS=SKIPS+"SUPPORT,";
+											//console.debug("FLUNIK: %d The SUPPORT building level %d is lower than DHQ level %d but cant upgrade - skipping to next",cityname, SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
 											if (currenttibpct<80) { 
+												console.debug(upgradeinfo+" - Skipped: "+SKIPS)
 												continue; 
 											}
 										};
@@ -427,14 +446,17 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								
 								if (REPAIR != null && CC != null) {
 									if (maxRT>14400 && REPAIR.get_CurrentLevel()<CC.get_CurrentLevel()) { // No point upgrading unless RT > 4 hours (14400 seconds)
-										console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
+										//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
 										if (REPAIR.CanUpgrade()) {
-											console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											//console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											console.debug(upgradeinfo+" - Skipped: "+SKIPS+" - Upg: REPAIR");
 											REPAIR.Upgrade();
 											return;
 										} else {
-											console.debug("FLUNIK: %d The %d level %d has repair time %d but cant upgrade - skipping to next",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											var SKIPS=SKIPS+"REPAIR,";
+											//console.debug("FLUNIK: %d The %d level %d has repair time %d but cant upgrade - skipping to next",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
 											if (currenttibpct<80) { 
+												console.debug(upgradeinfo+" - Skipped: "+SKIPS)
 												continue; 
 											}
 										};
@@ -443,10 +465,14 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 
 								if (lowestbuilding != null) { 
 									if (lowestbuilding.CanUpgrade() && currenttibpct>80) {
-										console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
+										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
+										console.debug(upgradeinfo+" - Skipped: "+SKIPS+" - Upg: "+lowestbuildingname+" lvl: "+lowestbuildinglevel);
 										lowestbuilding.Upgrade();
 										return;
 									}
+								}
+								if (SKIPS != "" || upgradeinfo != "FLUNIK: "+cityname ){
+									console.debug(upgradeinfo+" - Skipped: "+SKIPS)
 								}
 
 							}; // for city
