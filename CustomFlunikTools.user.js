@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130223b
+// @version     20130224a
 // ==/UserScript==
 
 /*
@@ -143,9 +143,8 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								//console.debug("FLUNIK: Crystal is %d",currentcrypct);
 								//console.debug("FLUNIK: Tiberium is %d",currenttibpct);
 								
-								
-
-								var upgradeinfo = "FLUNIK: "+cityname;
+								var d = new Date()
+								var upgradeinfo = d.toLocaleTimeString()+" FLUNIK: "+cityname;
 								
 								var units = city.get_CityUnitsData();
 								var offenceUnits = units.get_OffenseUnits();
@@ -378,7 +377,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								if (CC != null) { 
 									if (CC.get_CurrentLevel() < baselvl) {
 										if (CC.CanUpgrade()) {
-											console.debug("FLUNIK: %d The CC building level %d is lower than base level %d - Upgrading",cityname, CC.get_CurrentLevel(), baselvl);
+											//console.debug("FLUNIK: %d The CC building level %d is lower than base level %d - Upgrading",cityname, CC.get_CurrentLevel(), baselvl);
 											console.debug(upgradeinfo+" - Skipped: "+SKIPS+" - Upg: CC");
 											CC.Upgrade();
 											return;
@@ -502,7 +501,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										return;
 									}
 								}
-								if (SKIPS != "" || upgradeinfo != "FLUNIK: "+cityname ){
+								if (SKIPS != "" || upgradeinfo != d.toLocaleTimeString()+" FLUNIK: "+cityname ){
 									console.debug(upgradeinfo+" - Skipped: "+SKIPS)
 								}
 
