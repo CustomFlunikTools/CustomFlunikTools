@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130223a
+// @version     20130223b
 // ==/UserScript==
 
 /*
@@ -103,12 +103,14 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 							var _this = FlunikTools.Main.getInstance();
 							// and now you can just use - Thx KRS_L
 							//var tiberiumisfull = _this.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
-							
+							console.debug("FLUNIK: Activated");
+
 							this.autoUpgrade();
 							this.autoUpdateHandle = window.setInterval(this.autoUpgrade, 10000);
 						},
 						
 						stopAutoUpdate: function () {
+							console.debug("FLUNIK: STOPPED");
 							window.clearInterval(this.autoUpdateHandle);
 							this.autoUpdateHandle = null;
 						},
@@ -220,32 +222,8 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 											isPaid: true
 									};
 
-									//console.debug("The %d building has a level of: %d", name, buildinglvl);
-									if	(buildinglvl < lowestbuildinglevel && building.CanUpgrade())	{
-										var lowestbuildinglevel=buildinglvl;
-										var lowestbuilding=building;
-										var lowestbuildingname=name;
-									};
-
 									if 	(name == "Construction Yard") {
 										var CY=building;
-										continue;
-									};            
-									if 	(name == "Command Center") {
-										var CC=building;
-										continue;
-									};            
-									if 	(name == "Defense HQ") {
-										var DHQ=building;
-										continue;
-									};            
-									if 	(name == "Defense Facility") {
-										var DF=building;
-										continue;
-									};            
-									if 	(name == "Falcon Support" || name == "Ion Cannon Support" || name == "Skystrike Support" ||
-											name == "Blade of Kane" || name == "Eye of Kane" || name == "Fist of Kane" ) {
-										var SUPPORT=building;
 										continue;
 									};            
 									if 	(name == "Barracks" || name == "Hand of Nod") {
@@ -263,6 +241,30 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										var airRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Aircraft, false);
 										continue;
 									}; 
+									if 	(name == "Command Center") {
+										var CC=building;
+										continue;
+									};            
+									if 	(name == "Defense HQ") {
+										var DHQ=building;
+										continue;
+									};            
+									if 	(name == "Defense Facility") {
+										var DF=building;
+										continue;
+									};            
+									if 	(name == "Falcon Support" || name == "Ion Cannon Support" || name == "Skystrike Support" ||
+											name == "Blade of Kane" || name == "Eye of Kane" || name == "Fist of Kane" ) {
+										var SUPPORT=building;
+										continue;
+									};            
+									// Buildings above this will never be a default upgrade
+									//console.debug("The %d building has a level of: %d", name, buildinglvl);
+									if	(buildinglvl < lowestbuildinglevel && building.CanUpgrade())	{
+										var lowestbuildinglevel=buildinglvl;
+										var lowestbuilding=building;
+										var lowestbuildingname=name;
+									};
 									if 	(name == "Refinery") {
 										var numREF=numREF+1;
 										continue;
@@ -485,7 +487,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								if (lowestbuilding != null) { 
 									if (lowestbuilding.CanUpgrade() && currenttibpct>80) {
 										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
-										console.debug(upgradeinfo+" - Skipped: "+SKIPS+" - Upg: "+lowestbuildingname+" lvl: "+lowestbuildinglevel);
+										console.debug(upgradeinfo+" - Skipped: "+SKIPS+" - Default Upg: "+lowestbuildingname+" lvl: "+lowestbuildinglevel);
 										lowestbuilding.Upgrade();
 										return;
 									}
