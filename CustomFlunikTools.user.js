@@ -139,6 +139,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 
 								var currenttibpct = Math.round(10000*city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium)/city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium))/100 ;
 								var currentcrypct = Math.round(10000*city.GetResourceCount(ClientLib.Base.EResourceType.Crystal)/city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal))/100 ;
+								var currentpowpct = Math.round(10000*city.GetResourceCount(ClientLib.Base.EResourceType.Power)/city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Power))/100 ;
 								//console.debug("FLUNIK: Crystal is %d",currentcrypct);
 								//console.debug("FLUNIK: Tiberium is %d",currenttibpct);
 								
@@ -257,7 +258,16 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 											name == "Blade of Kane" || name == "Eye of Kane" || name == "Fist of Kane" ) {
 										var SUPPORT=building;
 										continue;
-									};            
+									};       
+									if (currentpowpct>98) {
+										// skip these on default upgrade if power is full
+										if 	(name == "Power Plant") {
+											continue;
+										}; 
+										if 	(name == "Accumulator") {
+											continue;
+										}; 
+									}
 									// Buildings above this will never be a default upgrade
 									//console.debug("The %d building has a level of: %d", name, buildinglvl);
 									if	(buildinglvl < lowestbuildinglevel && building.CanUpgrade())	{
@@ -485,7 +495,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								};
 
 								if (lowestbuilding != null) { 
-									if (lowestbuilding.CanUpgrade() && currenttibpct>80) {
+									if (lowestbuilding.CanUpgrade() && currenttibpct>95) {
 										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
 										console.debug(upgradeinfo+" - Skipped: "+SKIPS+" - Default Upg: "+lowestbuildingname+" lvl: "+lowestbuildinglevel);
 										lowestbuilding.Upgrade();
