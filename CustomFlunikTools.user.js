@@ -491,11 +491,11 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
 										if (REPAIR.CanUpgrade()) {
 											//console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
-											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: REPAIR "+maxRT+">21600");
+											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: "+repairname+" "+maxRT+">21600");
 											REPAIR.Upgrade();
 											return;
 										} else {
-											var infolineSkipped=infolineSkipped+"REPAIR "+maxRT+">21600,";
+											var infolineSkipped=infolineSkipped+repairname+" "+maxRT+">21600,";
 											//console.debug("FLUNIK: %d The %d level %d has repair time %d but cant upgrade - skipping to next",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
 											if (currenttibpct<80) { 
 												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
@@ -510,11 +510,11 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
 										if (REPAIR.CanUpgrade()) {
 											//console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
-											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: REPAIR "+maxRT+">14400&REPAIR<CC");
+											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: "+repairname+" "+maxRT+">14400&REPAIR<CC");
 											REPAIR.Upgrade();
 											return;
 										} else {
-											var infolineSkipped=infolineSkipped+"REPAIR "+maxRT+">14400&REPAIR<CC,";
+											var infolineSkipped=infolineSkipped+repairname+" "+maxRT+">14400&REPAIR<CC,";
 											//console.debug("FLUNIK: %d The %d level %d has repair time %d but cant upgrade - skipping to next",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
 											if (currenttibpct<80) { 
 												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
