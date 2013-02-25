@@ -273,7 +273,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										var SUPPORT=building;
 										continue;
 									};       
-									if (currentpowpct>95) {
+									if (currentpowpct>80) {
 										// skip these on default upgrade if power is full
 										if 	(name == "Power Plant") {
 											continue;
@@ -486,6 +486,24 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									}
 								};
 
+								if (REPAIR != null) {
+									if (maxRT>21600) { // Always try to get time below 6 hours (21600 seconds)
+										//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
+										if (REPAIR.CanUpgrade()) {
+											//console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: REPAIR "+maxRT+">21600");
+											REPAIR.Upgrade();
+											return;
+										} else {
+											var infolineSkipped=infolineSkipped+"REPAIR "+maxRT+">21600,";
+											//console.debug("FLUNIK: %d The %d level %d has repair time %d but cant upgrade - skipping to next",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											if (currenttibpct<80) { 
+												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
+												continue; 
+											}
+										};
+									};
+								};
 								
 								if (REPAIR != null && CC != null) {
 									if (maxRT>14400 && REPAIR.get_CurrentLevel()<CC.get_CurrentLevel()) { // No point upgrading unless RT > 4 hours (14400 seconds)
