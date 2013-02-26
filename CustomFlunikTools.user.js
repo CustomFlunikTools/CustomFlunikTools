@@ -4,10 +4,15 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130224b
+// @version     20130226a
 // ==/UserScript==
 
 /*
+
+NEW feature - upgrade based on maelstrom tools upgrade priority overview 
+Auto detection of base build for power (attack) or cash to determine which overview to use. 
+ 
+  
 Original Flunik tools would upgrade buildings randomly. I have tried to make the upgrading more
 intelligent. Note some of the logic in script is different but here were the original goals.
 
@@ -90,6 +95,37 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 
 						},
 
+						
+						
+						print_r: function (arr,level) {
+							var dumped_text = "";
+							if(!level) level = 0;
+
+							//The padding given at the beginning of the line.
+							var level_padding = "";
+							for(var j=0;j<level+1;j++) level_padding += "    ";
+
+							if(typeof(arr) == 'object') { //Array/Hashes/Objects 
+								for(var item in arr) {
+									var value = arr[item];
+
+									if(typeof(value) == 'object') { //If it is an array,
+										dumped_text += level_padding + "'" + item + "' ...\n";
+										dumped_text += FlunikTools.Main.prototype.print_r(value,level+1);
+									} else {
+										dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+									}
+								}
+							} else { //Stings/Chars/Numbers etc.
+								dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+							}
+							return dumped_text;
+						},
+						
+						
+						
+						
+						
 						 get_IsFull: function (city, type) {
 							if (city.GetResourceCount(type) < (city.GetResourceMaxStorage(type)*0.80)) {
 								return false;
@@ -106,7 +142,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 							console.debug("FLUNIK: Activated");
 
 							this.autoUpgrade();
-							this.autoUpdateHandle = window.setInterval(this.autoUpgrade, 10000);
+							this.autoUpdateHandle = window.setInterval(this.autoUpgrade, 60000);
 						},
 						
 						stopAutoUpdate: function () {
@@ -116,6 +152,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 						},
 
 						autoUpgrade: function () {
+						
 							for (var nCity in ClientLib.Data.MainData.GetInstance().get_Cities().get_AllCities().d) {
 								var city = ClientLib.Data.MainData.GetInstance().get_Cities().get_AllCities().d[nCity];
 								var cityname = city.get_Name();
@@ -127,7 +164,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								var lowestoffencelevel = 999;
 								var lowestupgdefencelevel = 999;
 								var lowestupgoffencelevel = 999;
-					//			console.debug("FLUNIK: ----------- Analyzing city %d with level %d", cityname, baselvl);
+								//console.debug("FLUNIK: ----------- Analyzing city %d with level %d", city.get_Name(), baselvl);
 
 								// get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
 								// or
@@ -145,7 +182,32 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 			                    //this.Cache[ClientLib.Base.EResourceType.Gold][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
 								// bOnlyAffordableBuildings = true/false
 								// bOnlyTopBuildings = true/false
+//								console.debug("FLUNIK: mlist %d",mlist.toSource());
+								//console.debug("FLUNIK: mlist %d",JSON.stringify(mlist));
 								
+								 //for (var mBuilding in mlist[ClientLib.Base.EResourceType.Power][city]) {
+				                    //  var UpItem = UpgradeList[eResourceType][mCity][mBuilding];
+							//		var name = mBuilding.get_UnitGameData_Obj().dn;
+							//		console.debug("FLUNIK: mlist name %d",name);
+								// }
+								//var mlist = new Array();
+								//var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Accumulator], ClientLib.Base.EModifierType.PowerPackageSize, ClientLib.Base.EModifierType.PowerProduction, true, true);
+								//console.debug(FlunikTools.Main.prototype.print_r(mlist));  //call it like this typeof(arr)
+								//console.debug("FLUOUT  --  "+typeof(mlist[0]));  //call it like this
+								//var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, true, true);
+								//console.debug(FlunikTools.Main.prototype.print_r(mlist));  //call it like this
+								//console.debug("FLUOUT  --  "+mlist[0]['Ratio']);  //call it like this
+								//var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.CrystalPackageSize, ClientLib.Base.EModifierType.CrystalProduction, true, true);
+								//console.debug(FlunikTools.Main.prototype.print_r(mlist));  //call it like this
+								//console.debug("FLUOUT  --  "+mlist[0]['Ratio']);  //call it like this
+								//console.debug("FLUOUT Cry  --  "+typeof(mlist[0]));  //call it like this
+								//var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.TiberiumPackageSize, ClientLib.Base.EModifierType.TiberiumProduction, true, true);
+								//console.debug(FlunikTools.Main.prototype.print_r(mlist));  //call it like this
+								//console.debug("FLUOUT Tib --  "+typeof(mlist[0]));  //call it like this
+								//console.debug("FLUOUT  --  "+mlist[0]['Ratio']);  //call it like this
+
+				                      
+				                      
 								
 //								console.debug("FLUNIK: Tiberium current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
 //								console.debug("FLUNIK: Crystal current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
@@ -276,6 +338,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (currentpowpct>80) {
 										// skip these on default upgrade if power is full
 										if 	(name == "Power Plant") {
+											var numPOW=numPOW+1;
 											continue;
 										}; 
 										if 	(name == "Accumulator") {
@@ -300,6 +363,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										continue;
 									}; 
 									if 	(name == "Power Plant") {
+										var numPOW=numPOW+1;
 										continue;
 									}; 
 									if 	(name == "Accumulator") {
@@ -524,6 +588,21 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									};
 								};
 
+								if (currenttibpct>90){
+									var mlist = new Array();
+									if (numPOW>numREF) {
+										var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Accumulator], ClientLib.Base.EModifierType.PowerPackageSize, ClientLib.Base.EModifierType.PowerProduction, true, true);
+									} else {
+										var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, true, true);
+									}
+									//console.debug(FlunikTools.Main.prototype.print_r(mlist));  
+									if (typeof(mlist[0])=='object') {
+										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Priority Upg: "+mlist[0]['Type']+" lvl: "+mlist[0]['Level'])
+                                        ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UpgradeBuilding", mlist[0]['Building'], null, null, true);
+										return;
+									}
+								}
+								
 								if (lowestbuilding != null) { 
 									if (lowestbuilding.CanUpgrade() && currenttibpct>95) {
 										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
