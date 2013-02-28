@@ -4,10 +4,34 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130227a
+// @version     20130227c
 // ==/UserScript==
 
 /*
+
+Script does this (in this order): 
+1. Upgrade lowest level offence unit if possible 
+2. Upgrade lowest level defence unit if possible 
+3. Gather information about your base 
+4. if crystal is more than 80% full and your offence is maxed out try to upgrade CC 
+5. if #4 is true but you cant upgrade your CC (or you dont have one) and defence is maxed out try to upgrade DHQ 
+6. if your CY < level 25 upgrade CY 
+7. if your CC < base level upgrade CC 
+8. if your offence is maxed out upgrade CC 
+9. if your DHQ is two levels below CC and defence is maxed upgrade DHQ 
+10. if you have no CC and defence is maxed upgrade DHQ 
+11. if DF < DHQ upgrade DF 
+12. if Defensive support building < DHQ then upgrade support 
+13. if repair time > 6 hours upgrade repair structure 
+14. if repair time > 4 hours and repair structure level < CC upgrade repair structure 
+15. if lowest building is 6 levels below base level and we have at least 20% tiberium upgrade lowest building
+16. Priority calculations are made depending upon buildings existing. Lowest cost of those calculations is built if tiberium > 20%.
+	A. If harvesters exist priority calculations are done for Crystal and Tiberium
+	B. If #PP>#REF then base is power base and priority calculation is done for power
+	C. If #PP<#REF then base is cash base and priority calculation is done for cash
+17. if tiberium is > 95% and nothing was upgraded above then upgrade lowest level Silo/Harvester/Refinery/Power Plant/Accumulator
+
+
 
 NEW feature - upgrade based on maelstrom tools upgrade priority overview 
 Auto detection of base build for power (attack) or cash to determine which overview to use. 
@@ -557,6 +581,15 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									};
 								};
 
+								if (lowestbuilding != null) { 
+									if (lowestbuildinglevel+6<baselvl && currenttibpct>20) {
+										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
+										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: lowest+6<baselvl "+lowestbuildingname+" lvl: "+lowestbuildinglevel)
+										lowestbuilding.Upgrade();
+										return;
+									}
+								}
+
 								
 //this.Cache[ClientLib.Base.EResourceType.Tiberium][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.TiberiumPackageSize, ClientLib.Base.EModifierType.TiberiumProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
 //this.Cache[ClientLib.Base.EResourceType.Crystal][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.CrystalPackageSize, ClientLib.Base.EModifierType.CrystalProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
@@ -578,20 +611,22 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 											var mlist=tlist;
 										}
 									}
-									var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.CrystalPackageSize, ClientLib.Base.EModifierType.CrystalProduction, true, true);
-									if (typeof(tlist[0])=='object') {
-										if (tlist[0]['Ticks']<minTick) {
-											var tprio="Crystal ";
-											var minTick=tlist[0]['Ticks'];
-											var mlist=tlist;
+									if (numHAR>0) {
+										var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.CrystalPackageSize, ClientLib.Base.EModifierType.CrystalProduction, true, true);
+										if (typeof(tlist[0])=='object') {
+											if (tlist[0]['Ticks']<minTick) {
+												var tprio="Crystal ";
+												var minTick=tlist[0]['Ticks'];
+												var mlist=tlist;
+											}
 										}
-									}
-									var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.TiberiumPackageSize, ClientLib.Base.EModifierType.TiberiumProduction, true, true);
-									if (typeof(tlist[0])=='object') {
-										if (tlist[0]['Ticks']<minTick) {
-											var tprio="Tiberium ";
-											var minTick=tlist[0]['Ticks'];
-											var mlist=tlist;
+										var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.TiberiumPackageSize, ClientLib.Base.EModifierType.TiberiumProduction, true, true);
+										if (typeof(tlist[0])=='object') {
+											if (tlist[0]['Ticks']<minTick) {
+												var tprio="Tiberium ";
+												var minTick=tlist[0]['Ticks'];
+												var mlist=tlist;
+											}
 										}
 									}
 									if (typeof(mlist[0])=='object') {
