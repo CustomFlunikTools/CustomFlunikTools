@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130226a
+// @version     20130227a
 // ==/UserScript==
 
 /*
@@ -173,39 +173,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 //								var crystalisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
 								
   	  
-						        // HuffyTools.UpgradePriority.prototype.getPrioList
-								//            getPrioList: function (city, arTechtypes, eModPackageSize, eModProduction, bOnlyTopBuildings, bOnlyAffordableBuildings) {
 								
-			                    //this.Cache[ClientLib.Base.EResourceType.Tiberium][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.TiberiumPackageSize, ClientLib.Base.EModifierType.TiberiumProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
-			                    //this.Cache[ClientLib.Base.EResourceType.Crystal][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.CrystalPackageSize, ClientLib.Base.EModifierType.CrystalProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
-			                    //this.Cache[ClientLib.Base.EResourceType.Power][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Accumulator], ClientLib.Base.EModifierType.PowerPackageSize, ClientLib.Base.EModifierType.PowerProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
-			                    //this.Cache[ClientLib.Base.EResourceType.Gold][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
-								// bOnlyAffordableBuildings = true/false
-								// bOnlyTopBuildings = true/false
-//								console.debug("FLUNIK: mlist %d",mlist.toSource());
-								//console.debug("FLUNIK: mlist %d",JSON.stringify(mlist));
-								
-								 //for (var mBuilding in mlist[ClientLib.Base.EResourceType.Power][city]) {
-				                    //  var UpItem = UpgradeList[eResourceType][mCity][mBuilding];
-							//		var name = mBuilding.get_UnitGameData_Obj().dn;
-							//		console.debug("FLUNIK: mlist name %d",name);
-								// }
-								//var mlist = new Array();
-								//var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Accumulator], ClientLib.Base.EModifierType.PowerPackageSize, ClientLib.Base.EModifierType.PowerProduction, true, true);
-								//console.debug(FlunikTools.Main.prototype.print_r(mlist));  //call it like this typeof(arr)
-								//console.debug("FLUOUT  --  "+typeof(mlist[0]));  //call it like this
-								//var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, true, true);
-								//console.debug(FlunikTools.Main.prototype.print_r(mlist));  //call it like this
-								//console.debug("FLUOUT  --  "+mlist[0]['Ratio']);  //call it like this
-								//var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.CrystalPackageSize, ClientLib.Base.EModifierType.CrystalProduction, true, true);
-								//console.debug(FlunikTools.Main.prototype.print_r(mlist));  //call it like this
-								//console.debug("FLUOUT  --  "+mlist[0]['Ratio']);  //call it like this
-								//console.debug("FLUOUT Cry  --  "+typeof(mlist[0]));  //call it like this
-								//var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.TiberiumPackageSize, ClientLib.Base.EModifierType.TiberiumProduction, true, true);
-								//console.debug(FlunikTools.Main.prototype.print_r(mlist));  //call it like this
-								//console.debug("FLUOUT Tib --  "+typeof(mlist[0]));  //call it like this
-								//console.debug("FLUOUT  --  "+mlist[0]['Ratio']);  //call it like this
-
 				                      
 				                      
 								
@@ -285,7 +253,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 							//		console.debug(upgradeinfo);
 								//}
 								var CY=CC=DHQ=DF=SUPPORT=INF=VEH=AIR=lowestbuilding=null;
-								var infRT=vehRT=airRT=numPOW=numREF=0;
+								var infRT=vehRT=airRT=numPOW=numREF=numHAR=0;
 								
 								for (var nBuildings in buildings.d) {
 									var building = buildings.d[nBuildings];
@@ -360,6 +328,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										continue;
 									}; 
 									if 	(name == "Harvester") {
+										var numHAR=numHAR+1;
 										continue;
 									}; 
 									if 	(name == "Power Plant") {
@@ -455,7 +424,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (CC.get_CurrentLevel() < baselvl) {
 										if (CC.CanUpgrade()) {
 											//console.debug("FLUNIK: %d The CC building level %d is lower than base level %d - Upgrading",cityname, CC.get_CurrentLevel(), baselvl);
-											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: CC<base");
+											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: CC<base "+CC.get_CurrentLevel());
 											CC.Upgrade();
 											return;
 										} else {
@@ -473,7 +442,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (CC.get_CurrentLevel() == lowestoffencelevel) {
 										if (CC.CanUpgrade()) {
 											//console.debug("FLUNIK: %d The CC building level %d matches lowest offence level %d - Upgrading",cityname, CC.get_CurrentLevel(), lowestoffencelevel);
-											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: CC=army");
+											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: CC=army "+CC.get_CurrentLevel());
 											CC.Upgrade();
 											return;
 										} else {
@@ -500,7 +469,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (DHQ.get_CurrentLevel() == lowestdefencelevel && tryDHQ) {
 										if (DHQ.CanUpgrade()) {
 											//console.debug("FLUNIK: %d The DHQ building level %d matches lowest defence level %d - Upgrading",cityname, DHQ.get_CurrentLevel(), lowestdefencelevel);
-											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: DHQ=def");
+											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: DHQ=def "+DHQ.get_CurrentLevel());
 											DHQ.Upgrade();
 											return;
 										} else {
@@ -518,7 +487,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (DF.get_CurrentLevel() < DHQ.get_CurrentLevel()) {
 										if (DF.CanUpgrade()) {
 											//console.debug("FLUNIK: %d The DF building level %d is lower than DHQ level %d - Upgrading",cityname, DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
-											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: DF<DHQ");
+											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: DF<DHQ "+DF.get_CurrentLevel());
 											DF.Upgrade();
 											return;
 										} else {
@@ -536,7 +505,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									if (SUPPORT.get_CurrentLevel() < DHQ.get_CurrentLevel()) {
 										if (SUPPORT.CanUpgrade()) {
 											//console.debug("FLUNIK: %d The SUPPORT building level %d is lower than DHQ level %d - Upgrading",cityname, SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
-											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: SUPPORT<DHQ");
+											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: SUPPORT<DHQ "+SUPPORT.get_CurrentLevel());
 											SUPPORT.Upgrade();
 											return;
 										} else {
@@ -555,7 +524,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
 										if (REPAIR.CanUpgrade()) {
 											//console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
-											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: "+repairname+" "+maxRT+">21600");
+											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: "+repairname+" "+maxRT+">21600 "+REPAIR.get_CurrentLevel());
 											REPAIR.Upgrade();
 											return;
 										} else {
@@ -574,7 +543,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 										//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
 										if (REPAIR.CanUpgrade()) {
 											//console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
-											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: "+repairname+" "+maxRT+">14400&REPAIR<CC");
+											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: "+repairname+" "+maxRT+">14400&REPAIR<CC "+REPAIR.get_CurrentLevel());
 											REPAIR.Upgrade();
 											return;
 										} else {
@@ -588,21 +557,51 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									};
 								};
 
-								if (currenttibpct>90){
-									var mlist = new Array();
+								
+//this.Cache[ClientLib.Base.EResourceType.Tiberium][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.TiberiumPackageSize, ClientLib.Base.EModifierType.TiberiumProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
+//this.Cache[ClientLib.Base.EResourceType.Crystal][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.CrystalPackageSize, ClientLib.Base.EModifierType.CrystalProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
+//this.Cache[ClientLib.Base.EResourceType.Power][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Accumulator], ClientLib.Base.EModifierType.PowerPackageSize, ClientLib.Base.EModifierType.PowerProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
+//this.Cache[ClientLib.Base.EResourceType.Gold][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
+
+								if (currenttibpct>20){
+									var minTick=99999
 									if (numPOW>numREF) {
-										var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Accumulator], ClientLib.Base.EModifierType.PowerPackageSize, ClientLib.Base.EModifierType.PowerProduction, true, true);
+										var tprio="power "+numPOW+"PP>"+numREF+"RF ";
+										var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Accumulator], ClientLib.Base.EModifierType.PowerPackageSize, ClientLib.Base.EModifierType.PowerProduction, true, true);
 									} else {
-										var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, true, true);
+										var tprio="cash "+numPOW+"PP<"+numREF+"RF ";
+										var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, true, true);
 									}
-									//console.debug(FlunikTools.Main.prototype.print_r(mlist));  
+									if (typeof(tlist[0])=='object') {
+										if (tlist[0]['Ticks']<minTick) {
+											var minTick=tlist[0]['Ticks'];
+											var mlist=tlist;
+										}
+									}
+									var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.CrystalPackageSize, ClientLib.Base.EModifierType.CrystalProduction, true, true);
+									if (typeof(tlist[0])=='object') {
+										if (tlist[0]['Ticks']<minTick) {
+											var tprio="Crystal ";
+											var minTick=tlist[0]['Ticks'];
+											var mlist=tlist;
+										}
+									}
+									var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.TiberiumPackageSize, ClientLib.Base.EModifierType.TiberiumProduction, true, true);
+									if (typeof(tlist[0])=='object') {
+										if (tlist[0]['Ticks']<minTick) {
+											var tprio="Tiberium ";
+											var minTick=tlist[0]['Ticks'];
+											var mlist=tlist;
+										}
+									}
 									if (typeof(mlist[0])=='object') {
-										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Priority Upg: "+mlist[0]['Type']+" lvl: "+mlist[0]['Level'])
-                                        ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UpgradeBuilding", mlist[0]['Building'], null, null, true);
+										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Priority "+tprio+" Upg: "+mlist[0]['Type']+" lvl: "+mlist[0]['Level'])
+										ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UpgradeBuilding", mlist[0]['Building'], null, null, true);
+//										console.debug(FlunikTools.Main.prototype.print_r(mlist));  
 										return;
 									}
 								}
-								
+
 								if (lowestbuilding != null) { 
 									if (lowestbuilding.CanUpgrade() && currenttibpct>95) {
 										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
