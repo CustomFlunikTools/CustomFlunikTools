@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130227c
+// @version     20130227d
 // ==/UserScript==
 
 /*
@@ -597,6 +597,8 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 //this.Cache[ClientLib.Base.EResourceType.Gold][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
 
 								if (currenttibpct>20){
+									var mlist = new Array();
+									var tlist = new Array();
 									var minTick=99999
 									if (numPOW>numREF) {
 										var tprio="power "+numPOW+"PP>"+numREF+"RF ";
