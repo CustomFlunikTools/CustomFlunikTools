@@ -615,7 +615,7 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									var mlist = new Array();
 									var tlist = new Array();
 									var minTick=99999
-									if (cityname.indexOf('.') !== -1 or cityname.indexOf('-') !== -1) {
+									if (cityname.indexOf('.') !== -1 || cityname.indexOf('-') !== -1) {
 										if (cityname.indexOf('.') !== -1) {
 											var tprio="forced power "+numPOW+"PP>"+numREF+"RF ";
 											var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Accumulator], ClientLib.Base.EModifierType.PowerPackageSize, ClientLib.Base.EModifierType.PowerProduction, true, true);
