@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      Flunik dbendure RobertT KRS_L
-// @version     20130227d
+// @version     20130301a
 // ==/UserScript==
 
 /*
@@ -30,6 +30,10 @@ Script does this (in this order):
 	B. If #PP>#REF then base is power base and priority calculation is done for power
 	C. If #PP<#REF then base is cash base and priority calculation is done for cash
 17. if tiberium is > 95% and nothing was upgraded above then upgrade lowest level Silo/Harvester/Refinery/Power Plant/Accumulator
+
+NOTE: Calculations in #16 can be overridden by changing city name. 
+	If name contains a dash "-" priority is cash.
+	If name contains a period "." priority is power. 
 
 
 
@@ -146,11 +150,18 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 							return dumped_text;
 						},
 						
-						
-						
-						
-						
-						 get_IsFull: function (city, type) {
+
+						logger: function (infolineHeader, infolineUnits, infolineSkipped, infolinemessage) {
+							if (infolineSkipped != "") {
+								console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: "+infolinemessage);
+							} else {
+								console.debug(infolineHeader+infolineUnits+" - Upg: "+infolinemessage);
+							} 
+						},	
+
+
+
+						get_IsFull: function (city, type) {
 							if (city.GetResourceCount(type) < (city.GetResourceMaxStorage(type)*0.80)) {
 								return false;
 							} else {
@@ -209,6 +220,8 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 								var currentpowpct = Math.round(10000*city.GetResourceCount(ClientLib.Base.EResourceType.Power)/city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Power))/100 ;
 								//console.debug("FLUNIK: Crystal is %d",currentcrypct);
 								//console.debug("FLUNIK: Tiberium is %d",currenttibpct);
+								
+
 								
 								var d = new Date()
 								var infolineHeader = d.toLocaleTimeString()+" FLUNIK: "+cityname+" - T:"+currenttibpct+" C:"+currentcrypct+" P:"+currentpowpct;
@@ -366,6 +379,8 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									console.debug("FLUNIK: You should NEVER see this - If you do the name of the building is: %d and is level: %d", name, buildinglvl);
 								}; // for buildings 
 
+								
+								
 //								FLUNIK: The Harvester building has a level of: 15 (program):234
 //								FLUNIK: The Power Plant building has a level of: 15 (program):234
 //								FLUNIK: The Silo building has a level of: 15 (program):234
@@ -600,34 +615,44 @@ If Airport/Barracks/Vehicles < CC level upgrade repair building
 									var mlist = new Array();
 									var tlist = new Array();
 									var minTick=99999
-									if (numPOW>numREF) {
-										var tprio="power "+numPOW+"PP>"+numREF+"RF ";
-										var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Accumulator], ClientLib.Base.EModifierType.PowerPackageSize, ClientLib.Base.EModifierType.PowerProduction, true, true);
-									} else {
-										var tprio="cash "+numPOW+"PP<"+numREF+"RF ";
-										var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, true, true);
-									}
-									if (typeof(tlist[0])=='object') {
-										if (tlist[0]['Ticks']<minTick) {
-											var minTick=tlist[0]['Ticks'];
-											var mlist=tlist;
+									if (cityname.indexOf('.') !== -1 or cityname.indexOf('-') !== -1) {
+										if (cityname.indexOf('.') !== -1) {
+											var tprio="forced power "+numPOW+"PP>"+numREF+"RF ";
+											var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Accumulator], ClientLib.Base.EModifierType.PowerPackageSize, ClientLib.Base.EModifierType.PowerProduction, true, true);
+										} else {
+											var tprio="forced cash "+numPOW+"PP<"+numREF+"RF ";
+											var mlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, true, true);
 										}
-									}
-									if (numHAR>0) {
-										var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.CrystalPackageSize, ClientLib.Base.EModifierType.CrystalProduction, true, true);
+									} else {
+										if (numPOW>numREF) {
+											var tprio="power "+numPOW+"PP>"+numREF+"RF ";
+											var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Accumulator], ClientLib.Base.EModifierType.PowerPackageSize, ClientLib.Base.EModifierType.PowerProduction, true, true);
+										} else {
+											var tprio="cash "+numPOW+"PP<"+numREF+"RF ";
+											var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, true, true);
+										}
 										if (typeof(tlist[0])=='object') {
 											if (tlist[0]['Ticks']<minTick) {
-												var tprio="Crystal ";
 												var minTick=tlist[0]['Ticks'];
 												var mlist=tlist;
 											}
 										}
-										var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.TiberiumPackageSize, ClientLib.Base.EModifierType.TiberiumProduction, true, true);
-										if (typeof(tlist[0])=='object') {
-											if (tlist[0]['Ticks']<minTick) {
-												var tprio="Tiberium ";
-												var minTick=tlist[0]['Ticks'];
-												var mlist=tlist;
+										if (numHAR>0) {
+											var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.CrystalPackageSize, ClientLib.Base.EModifierType.CrystalProduction, true, true);
+											if (typeof(tlist[0])=='object') {
+												if (tlist[0]['Ticks']<minTick) {
+													var tprio="Crystal ";
+													var minTick=tlist[0]['Ticks'];
+													var mlist=tlist;
+												}
+											}
+											var tlist = HuffyTools.UpgradePriority.prototype.getPrioList(city,[ClientLib.Base.ETechName.Harvester, ClientLib.Base.ETechName.Silo], ClientLib.Base.EModifierType.TiberiumPackageSize, ClientLib.Base.EModifierType.TiberiumProduction, true, true);
+											if (typeof(tlist[0])=='object') {
+												if (tlist[0]['Ticks']<minTick) {
+													var tprio="Tiberium ";
+													var minTick=tlist[0]['Ticks'];
+													var mlist=tlist;
+												}
 											}
 										}
 									}
