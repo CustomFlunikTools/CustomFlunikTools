@@ -68,13 +68,14 @@ intelligent.
 							console.log('Custom FLUNIKTOLS initialize');
 							AutoUpdateButton = new qx.ui.form.Button("Flunik", null).set({
 								toolTipText: "Flunik",
-								width: 100,
-								height: 40,
-								maxWidth: 100,
-								maxHeight: 40,
-								appearance: ("button-playarea-mode-frame"), //"button-standard-"+factionText), button-playarea-mode-red-frame
+								appearance: ("button-text-small"), //"button-standard-"+factionText), button-playarea-mode-red-frame
 								center: true
 							});
+//							width: 100,
+//							height: 40,
+//							maxWidth: 100,
+//							maxHeight: 40,
+//							appearance: ("button-playarea-mode-frame"), //"button-standard-"+factionText), button-playarea-mode-red-frame
 
 							AutoUpdateButton.addListener("click", function (e) {
 								if (window.FlunikTools.Main.getInstance().autoUpdateHandle != null) {
@@ -91,9 +92,11 @@ intelligent.
 
 							var app = qx.core.Init.getApplication();
 
+//							right: 120,
+//							bottom: 80
 							app.getDesktop().add(AutoUpdateButton, {
-								right: 120,
-								bottom: 80
+								right: 0,
+								bottom: 55
 							});
 
 						},
@@ -577,7 +580,7 @@ intelligent.
 								};
 
 								if (lowestbuilding != null) { 
-									if (lowestbuildinglevel+6<baselvl && currenttibpct>20) {
+									if (lowestbuildinglevel+6<baselvl && currenttibpct>2) {
 										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
 										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: lowest+6<baselvl "+lowestbuildingname+" lvl: "+lowestbuildinglevel)
 										lowestbuilding.Upgrade();
@@ -591,7 +594,7 @@ intelligent.
 //this.Cache[ClientLib.Base.EResourceType.Power][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Accumulator], ClientLib.Base.EModifierType.PowerPackageSize, ClientLib.Base.EModifierType.PowerProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
 //this.Cache[ClientLib.Base.EResourceType.Gold][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
 
-								if (currenttibpct>20){
+								if (currenttibpct>2){
 									var mlist = new Array();
 									var tlist = new Array();
 									var minTick=99999
