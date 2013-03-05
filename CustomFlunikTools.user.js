@@ -186,8 +186,10 @@ intelligent.
 //								var crystalisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
 								
   	  
-								
-				                      
+											                     
+								if (cityname.indexOf('_') !== -1) {
+									continue;
+								}
 				                      
 								
 //								console.debug("FLUNIK: Tiberium current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
