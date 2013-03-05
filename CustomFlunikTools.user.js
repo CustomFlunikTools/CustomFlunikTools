@@ -24,7 +24,7 @@ Script does this (in this order):
 12. if Defensive support building < DHQ then upgrade support 
 13. if repair time > 6 hours upgrade repair structure 
 14. if repair time > 4 hours and repair structure level < CC upgrade repair structure 
-15. if lowest building is 6 levels below base level and we have at least 20% tiberium upgrade lowest building
+15. if lowest building level is below 0.66*base level and we have at least 20% tiberium upgrade lowest building
 16. Priority calculations are made depending upon buildings existing. Lowest cost of those calculations is built if tiberium > 20%.
 	A. If harvesters exist priority calculations are done for Crystal and Tiberium
 	B. If #PP > #REF then base is power base and priority calculation is done for power
@@ -582,9 +582,9 @@ intelligent.
 								};
 
 								if (lowestbuilding != null) { 
-									if (lowestbuildinglevel+6<baselvl && currenttibpct>2) {
+									if (lowestbuildinglevel<0.66*baselvl && currenttibpct>2) {
 										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
-										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: lowest+6<baselvl "+lowestbuildingname+" lvl: "+lowestbuildinglevel)
+										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: lowest<0.66*baselvl "+lowestbuildingname+" lvl: "+lowestbuildinglevel)
 										lowestbuilding.Upgrade();
 										return;
 									}
@@ -596,7 +596,7 @@ intelligent.
 //this.Cache[ClientLib.Base.EResourceType.Power][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.PowerPlant, ClientLib.Base.ETechName.Accumulator], ClientLib.Base.EModifierType.PowerPackageSize, ClientLib.Base.EModifierType.PowerProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
 //this.Cache[ClientLib.Base.EResourceType.Gold][cname] = this.getPrioList(city, [ClientLib.Base.ETechName.Refinery, ClientLib.Base.ETechName.PowerPlant], ClientLib.Base.EModifierType.CreditsPackageSize, ClientLib.Base.EModifierType.CreditsProduction, bOnlyTopBuildings, bOnlyAffordableBuildings);
 
-								if (currenttibpct>2){
+								if (currenttibpct>20){
 									var mlist = new Array();
 									var tlist = new Array();
 									var minTick=99999
