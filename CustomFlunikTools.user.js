@@ -16,7 +16,7 @@ Script does this (in this order):
 4. if crystal is more than 80% full and your offence is maxed out try to upgrade CC 
 5. if #4 is true but you cant upgrade your CC (or you dont have one) and defence is maxed out try to upgrade DHQ 
 6. if your CY < level 25 upgrade CY 
-7. if your CC < base level upgrade CC 
+7. (removed for testing) if your CC < base level upgrade CC 
 8. if your offence is maxed out upgrade CC 
 9. if your DHQ is two levels below CC and defence is maxed upgrade DHQ 
 10. if you have no CC and defence is maxed upgrade DHQ 
@@ -444,6 +444,7 @@ intelligent.
 									}
 								};
 
+								/* Dont think this is necessary..
 								if (CC != null) { 
 									if (CC.get_CurrentLevel() < baselvl) {
 										if (CC.CanUpgrade()) {
@@ -461,6 +462,7 @@ intelligent.
 										};
 									}
 								};
+								*/
 
 								if (CC != null) { 
 									if (CC.get_CurrentLevel() == lowestoffencelevel) {
