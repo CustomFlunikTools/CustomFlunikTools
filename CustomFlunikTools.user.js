@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      RobertT Flunik dbendure KRS_L
-// @version     20130307d
+// @version     20130311b
 // ==/UserScript==
 
 /*
@@ -142,7 +142,7 @@ intelligent.
 
 								var repairData = ncity.get_CityRepairData();
 								var myRepair = repairData.CanRepair(0, viewMode);
-								//repairData.UpdateCachedFullRepairAllCost(viewMode);
+								repairData.UpdateCachedFullRepairAllCost(viewMode);
 								return ((myRepair != null) && (!ncity.get_IsLocked() || (viewMode != ClientLib.Vis.Mode.ArmySetup)));
 
 								return false;
@@ -198,12 +198,24 @@ intelligent.
 //								var tiberiumisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Tiberium);
 //								var crystalisfull = FlunikTools.Main.prototype.get_IsFull(city, ClientLib.Base.EResourceType.Crystal);
 								
-  	  
-											                     
-								if (cityname.indexOf('_') !== -1) {
-									continue;
+								var blockdef=blockoff=blockbuild=false;
+
+								if (cityname.indexOf('_D') !== -1 || cityname.indexOf('_O') !== -1 || cityname.indexOf('_B') !== -1) {
+									if (cityname.indexOf('_D') !== -1) {
+										var blockdef = true;
+									}
+									if (cityname.indexOf('_O') !== -1) {
+										var blockoff = true;
+									}
+									if (cityname.indexOf('_B') !== -1) {
+										var blockbuild = true;
+									}
+								} else {
+									if (cityname.indexOf('_') !== -1) {
+										continue;
+									}
 								}
-				                      
+
 								
 //								console.debug("FLUNIK: Tiberium current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
 //								console.debug("FLUNIK: Crystal current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
@@ -248,7 +260,7 @@ intelligent.
 									//console.debug("FLUNIK: OFFENCE - unitlvl: %d lowest: %d lowestupg: %d", unitlvl,lowestoffencelevel,lowestupgoffencelevel);
 								};
 								if (lowestupgoffencelevel<999) {
-									if (!FlunikTools.Main.prototype.CanRepairAll(city,ClientLib.Vis.Mode.ArmySetup)) {
+									if (!FlunikTools.Main.prototype.CanRepairAll(city,ClientLib.Vis.Mode.ArmySetup) || blockoff) {
 										var infolineUnits = infolineUnits+" - O: "+unitname+" "+lowestupgoffencelevel;
 										//			var upgradeinfo = "FLUNIK: %d Upgrading %d offence unit from level of: %d",cityname, unitname, lowestupgoffencelevel);
 										ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestupgoffenceunit_obj, null, null, true);
@@ -281,7 +293,7 @@ intelligent.
 
 								};
 								if (lowestupgdefencelevel<999) {
-									if (!FlunikTools.Main.prototype.CanRepairAll(city,ClientLib.Vis.Mode.ArmySetup)) {
+									if (!FlunikTools.Main.prototype.CanRepairAll(city,ClientLib.Vis.Mode.ArmySetup) || blockdef) {
 										var infolineUnits = infolineUnits+" - D: "+unitname+" "+lowestupgdefencelevel;
 										//			console.debug("FLUNIK: %d Upgrading %d defence unit from level of: %d",cityname, unitname, lowestupgdefencelevel);
 										ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestupgdefenceunit_obj, null, null, true);
@@ -295,6 +307,11 @@ intelligent.
 								//if (lowestupgoffencelevel<999 || lowestupgdefencelevel<999) {
 							//		console.debug(upgradeinfo);
 								//}
+								
+								if (blockbuild) {
+									continue;
+								}
+								
 								var CY=CC=DHQ=DF=SUPPORT=INF=VEH=AIR=lowestbuilding=null;
 								var infRT=vehRT=airRT=numPOW=numREF=numHAR=0;
 								
@@ -417,14 +434,13 @@ intelligent.
 								//console.debug("FLUNIK: %d The %d level is %d has repair time of %d",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
 								//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
 
-/*								if (lowestbuilding != null) { 
-									if (lowestbuildinglevel<(baselvl*0.66)) {
+								if (lowestbuilding != null) { 
+									if (lowestbuildinglevel<6) {
 										console.debug("FLUNIK: %d new building upgrade - %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
 										lowestbuilding.Upgrade();
 										return;
 									}
 								}
-*/
 								
 								if (currentcrypct>80) {
 									//			console.debug("FLUNIK: Crystal is full - checking if CC or DHQ upgrades is required");
