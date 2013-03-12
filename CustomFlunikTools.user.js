@@ -8,6 +8,19 @@
 // ==/UserScript==
 
 /*
+NOTE: If conditions match for items 6-14 then script will wait until there is enough resources to perform the upgrade 
+	unless tiberium exceeds 80%. When tiberium exceeds 80% it will check the conditions in order until an upgrade is found.
+
+NOTE: Calculations in #16 can be overridden by changing city name. 
+	If name contains a dash "-" priority is cash.
+	If name contains a period "." priority is power. 
+
+NOTE: Cities may be blocked of all upgrades by including an "_" in their name.
+	Selective blocking can be done using "_D", "_O" or "_B".
+	A "_D" blocks defence upgrades.
+	A "_O" blocks offence upgrades.
+	A "_B" blocks building upgrades.
+	You may combine them for example "Alpha_D_B" would upgrade only offence units.
 
 Script does this (in this order): 
 1. Upgrade lowest level offence unit if possible 
@@ -31,12 +44,6 @@ Script does this (in this order):
 	C. If #PP < #REF then base is cash base and priority calculation is done for cash
 17. if tiberium is > 95% and nothing was upgraded above then upgrade lowest level Silo/Harvester/Refinery/Power Plant/Accumulator
 
-NOTE: If conditions match for items 6-14 then script will wait until there is enough resources to perform the upgrade 
-	unless tiberium exceeds 80%. When tiberium exceeds 80% it will check the conditions in order until an upgrade is found.
-
-NOTE: Calculations in #16 can be overridden by changing city name. 
-	If name contains a dash "-" priority is cash.
-	If name contains a period "." priority is power. 
 
 NEW feature - upgrade based on maelstrom tools upgrade priority overview 
 Auto detection of base build for power (attack) or cash to determine which overview to use. 
