@@ -26,23 +26,24 @@ Script does this (in this order):
 1. Upgrade lowest level offence unit if possible 
 2. Upgrade lowest level defence unit if possible 
 3. Gather information about your base 
-4. if crystal is more than 80% full and your offence is maxed out try to upgrade CC 
-5. if #4 is true but you cant upgrade your CC (or you dont have one) and defence is maxed out try to upgrade DHQ 
-6. if your CY < level 25 upgrade CY 
-7. (removed for testing) if your CC < base level upgrade CC 
-8. if your offence is maxed out upgrade CC 
-9. if your DHQ is two levels below CC and defence is maxed upgrade DHQ 
-10. if you have no CC and defence is maxed upgrade DHQ 
-11. if DF < DHQ upgrade DF 
-12. if Defensive support building < DHQ then upgrade support 
-13. if repair time > 6 hours upgrade repair structure 
-14. if repair time > 4 hours and repair structure level < CC upgrade repair structure 
-15. if lowest building level is below 0.66*base level and we have at least 20% tiberium upgrade lowest building
-16. Priority calculations are made depending upon buildings existing. Lowest cost of those calculations is built if tiberium > 20%.
+4. Upgrade any production buildings < level 6
+5. if crystal is more than 80% full and your offence is maxed out try to upgrade CC 
+6. if #4 is true but you cant upgrade your CC (or you dont have one) and defence is maxed out try to upgrade DHQ 
+7. if your CY < level 25 upgrade CY 
+8. (removed for testing) if your CC < base level upgrade CC 
+9. if your offence is maxed out upgrade CC 
+10. if your DHQ is two levels below CC and defence is maxed upgrade DHQ 
+11. if you have no CC and defence is maxed upgrade DHQ 
+12. if DF < DHQ upgrade DF 
+13. if Defensive support building < DHQ then upgrade support 
+14. if repair time > 6 hours upgrade repair structure 
+15. if repair time > 4 hours and repair structure level < CC upgrade repair structure 
+16. if lowest building level is below 0.66*base level and we have at least 20% tiberium upgrade lowest building
+17. Priority calculations are made depending upon buildings existing. Lowest cost of those calculations is built if tiberium > 20%.
 	A. If harvesters exist priority calculations are done for Crystal and Tiberium
 	B. If #PP > #REF then base is power base and priority calculation is done for power
 	C. If #PP < #REF then base is cash base and priority calculation is done for cash
-17. if tiberium is > 95% and nothing was upgraded above then upgrade lowest level Silo/Harvester/Refinery/Power Plant/Accumulator
+18. if tiberium is > 95% and nothing was upgraded above then upgrade lowest level Silo/Harvester/Refinery/Power Plant/Accumulator
 
 
 NEW feature - upgrade based on maelstrom tools upgrade priority overview 
