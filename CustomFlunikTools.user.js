@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      RobertT Flunik dbendure KRS_L
-// @version     20130311b
+// @version     20130318b
 // ==/UserScript==
 
 /*
@@ -36,9 +36,10 @@ Script does this (in this order):
 11. if you have no CC and defence is maxed upgrade DHQ 
 12. if DF < DHQ upgrade DF 
 13. if Defensive support building < DHQ then upgrade support 
-14. if repair time > 6 hours upgrade repair structure 
+14. if repair time > 5:50 hours upgrade repair structure 
 15. if repair time > 4 hours and repair structure level < CC upgrade repair structure 
 16. if lowest building level is below 0.66*base level and we have at least 20% tiberium upgrade lowest building
+17. if lowest silo is below base level and we have at least 80% tiberium upgrade lowest silo
 17. Priority calculations are made depending upon buildings existing. Lowest cost of those calculations is built if tiberium > 20%.
 	A. If harvesters exist priority calculations are done for Crystal and Tiberium
 	B. If #PP > #REF then base is power base and priority calculation is done for power
@@ -194,6 +195,7 @@ intelligent.
 								//var player = city.get_PlayerName();
 								var buildings = city.get_Buildings();
 								var lowestbuildinglevel = 999;
+								var lowestsilolevel = 999;
 								var lowestdefencelevel = 999;
 								var lowestoffencelevel = 999;
 								var lowestupgdefencelevel = 999;
@@ -320,7 +322,7 @@ intelligent.
 									continue;
 								}
 								
-								var CY=CC=DHQ=DF=SUPPORT=INF=VEH=AIR=lowestbuilding=null;
+								var CY=CC=DHQ=DF=SUPPORT=INF=VEH=AIR=lowestbuilding=lowestsilo=null;
 								var infRT=vehRT=airRT=numPOW=numREF=numHAR=0;
 								
 								for (var nBuildings in buildings.d) {
@@ -398,6 +400,8 @@ intelligent.
 										continue;
 									}; 
 									if (tech == ClientLib.Base.ETechName.Silo) {
+										var lowestsilolevel=buildinglvl;
+										var lowestsilo=building;
 										continue;
 									}; 
 									if (tech == ClientLib.Base.ETechName.Harvester) {
@@ -596,7 +600,7 @@ intelligent.
 								};
 
 								if (REPAIR != null) {
-									if (maxRT>21600) { // Always try to get time below 6 hours (21600 seconds)
+									if (maxRT>21000) { // Always try to get time below 5:50 hours (21000 seconds)
 										//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
 										if (REPAIR.CanUpgrade()) {
 											//console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
@@ -638,6 +642,15 @@ intelligent.
 										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
 										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: lowest<0.66*baselvl "+lowestbuildingname+" lvl: "+lowestbuildinglevel)
 										lowestbuilding.Upgrade();
+										return;
+									}
+								}
+
+								if (lowestsilo != null) { 
+									if (lowestsilolevel<baselvl && currenttibpct>80) {
+										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
+										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: lowestsilo<baselvl&tib>80 lvl: "+lowestsilolevel)
+										lowestsilo.Upgrade();
 										return;
 									}
 								}
