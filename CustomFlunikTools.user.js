@@ -4,11 +4,11 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      RobertT Flunik dbendure KRS_L
-// @version     20130318b
+// @version     20130318c
 // ==/UserScript==
 
 /*
-NOTE: If conditions match for items 6-14 then script will wait until there is enough resources to perform the upgrade 
+NOTE: If conditions match for items 7-15 then script will wait until there is enough resources to perform the upgrade 
 	unless tiberium exceeds 80%. When tiberium exceeds 80% it will check the conditions in order until an upgrade is found.
 
 NOTE: Calculations in #16 can be overridden by changing city name. 
@@ -37,14 +37,14 @@ Script does this (in this order):
 12. if DF < DHQ upgrade DF 
 13. if Defensive support building < DHQ then upgrade support 
 14. if repair time > 5:50 hours upgrade repair structure 
-15. if repair time > 4 hours and repair structure level < CC upgrade repair structure 
+15. if repair time > 4 hours and repair structure level < CC and base level < 20 upgrade repair structure 
 16. if lowest building level is below 0.66*base level and we have at least 20% tiberium upgrade lowest building
 17. if lowest silo is below base level and we have at least 80% tiberium upgrade lowest silo
-17. Priority calculations are made depending upon buildings existing. Lowest cost of those calculations is built if tiberium > 20%.
+18. Priority calculations are made depending upon buildings existing. Lowest cost of those calculations is built if tiberium > 20%.
 	A. If harvesters exist priority calculations are done for Crystal and Tiberium
 	B. If #PP > #REF then base is power base and priority calculation is done for power
 	C. If #PP < #REF then base is cash base and priority calculation is done for cash
-18. if tiberium is > 95% and nothing was upgraded above then upgrade lowest level Silo/Harvester/Refinery/Power Plant/Accumulator
+19. if tiberium is > 95% and nothing was upgraded above then upgrade lowest level Silo/Harvester/Refinery/Power Plant/Accumulator
 
 
 NEW feature - upgrade based on maelstrom tools upgrade priority overview 
@@ -604,11 +604,11 @@ intelligent.
 										//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
 										if (REPAIR.CanUpgrade()) {
 											//console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
-											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: "+repairname+" "+maxRT+">21600 "+REPAIR.get_CurrentLevel());
+											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: "+repairname+" "+maxRT+">21000 "+REPAIR.get_CurrentLevel());
 											REPAIR.Upgrade();
 											return;
 										} else {
-											var infolineSkipped=infolineSkipped+repairname+" "+maxRT+">21600,";
+											var infolineSkipped=infolineSkipped+repairname+" "+maxRT+">21000,";
 											//console.debug("FLUNIK: %d The %d level %d has repair time %d but cant upgrade - skipping to next",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
 											if (currenttibpct<80) { 
 												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
@@ -619,7 +619,7 @@ intelligent.
 								};
 								
 								if (REPAIR != null && CC != null) {
-									if (maxRT>14400 && REPAIR.get_CurrentLevel()<CC.get_CurrentLevel()) { // No point upgrading unless RT > 4 hours (14400 seconds)
+									if (maxRT>14400 && REPAIR.get_CurrentLevel()<CC.get_CurrentLevel() && baselvl<20) { // No point upgrading unless RT > 4 hours (14400 seconds)
 										//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
 										if (REPAIR.CanUpgrade()) {
 											//console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
