@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      RobertT Flunik dbendure KRS_L
-// @version     20130318c
+// @version     20130321a
 // ==/UserScript==
 
 /*
@@ -479,7 +479,8 @@ intelligent.
 										}
 									};
 								};
-
+								
+								// ClientLib.Data.MainData.GetInstance().get_Cities().get_CurrentOwnCity().get_CityBuildingsData().GetFullRepairTime()
 								if (CY != null) { 
 									if (CY.get_CurrentLevel() < 25) {
 										if (CY.CanUpgrade()) {
@@ -743,7 +744,8 @@ intelligent.
 					for (var key in ClientLib.Data.CityBuilding.prototype) { //KRS_L
 						if (ClientLib.Data.CityBuilding.prototype[key] !== null) {
 							var strFunction = ClientLib.Data.CityBuilding.prototype[key].toString();
-							if (typeof ClientLib.Data.CityBuilding.prototype[key] === 'function' & strFunction.indexOf("true).l.length==0)){return true;}}return false") > -1) {
+							//if (typeof ClientLib.Data.CityBuilding.prototype[key] === 'function' & strFunction.indexOf("true).l.length==0)){return true;}}return false") > -1) {
+							if (typeof ClientLib.Data.CityBuilding.prototype[key] === 'function' & strFunction.indexOf("true).l.length==0))") > -1) {
 								ClientLib.Data.CityBuilding.prototype.CanUpgrade = ClientLib.Data.CityBuilding.prototype[key];
 								break;
 							}
