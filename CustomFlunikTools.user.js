@@ -187,6 +187,9 @@ intelligent.
 						},
 
 						autoUpgrade: function () {
+							// Variale to control debug statments to the console
+							// 0 = off, 1 = on, 2+ = verbose
+							var debug = 0;
 
 							for (var nCity in ClientLib.Data.MainData.GetInstance().get_Cities().get_AllCities().d) {
 								var city = ClientLib.Data.MainData.GetInstance().get_Cities().get_AllCities().d[nCity];
@@ -200,7 +203,10 @@ intelligent.
 								var lowestoffencelevel = 999;
 								var lowestupgdefencelevel = 999;
 								var lowestupgoffencelevel = 999;
-								//console.debug("FLUNIK: ----------- Analyzing city %s with level %f", cityname, baselvl);
+
+								if (debug > 0) {
+									console.debug("FLUNIK: ----------- Analyzing city %s with level %f", cityname, baselvl);
+								}
 
 								var blockdef=blockoff=blockbuild=false;
 
@@ -221,17 +227,22 @@ intelligent.
 								}
 
 								// DEBUG - show churrent Tiberium and Crystal amount and maximum
-								//console.debug("FLUNIK: Tiberium current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
-								//console.debug("FLUNIK: Crystal current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
-								//console.debug("FLUNIK: Power current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Power),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Power));
+								if (debug > 0) {
+									console.debug("FLUNIK: Tiberium current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
+									console.debug("FLUNIK: Crystal current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
+									console.debug("FLUNIK: Power current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Power),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Power));
+								}
 
 								var currenttibpct = Math.round(10000*city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium)/city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium))/100 ;
 								var currentcrypct = Math.round(10000*city.GetResourceCount(ClientLib.Base.EResourceType.Crystal)/city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal))/100 ;
 								var currentpowpct = Math.round(10000*city.GetResourceCount(ClientLib.Base.EResourceType.Power)/city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Power))/100 ;
 								// DEBUG - show churrent Tiberium and Crystal percentages
-								//console.debug("FLUNIK: Crystal is %f", currentcrypct);
-								//console.debug("FLUNIK: Tiberium is %f", currenttibpct);
-								//console.debug("FLUNIK: Power is %f", currentpowpct);
+								if (debug > 0)
+								{
+									console.debug("FLUNIK: Crystal is %f", currentcrypct);
+									console.debug("FLUNIK: Tiberium is %f", currenttibpct);
+									console.debug("FLUNIK: Power is %f", currentpowpct);
+								}
 
 								var d = new Date()
 								var infolineHeader = d.toLocaleTimeString()+" FLUNIK: "+cityname+" - T:"+currenttibpct+" C:"+currentcrypct+" P:"+currentpowpct;
@@ -261,7 +272,9 @@ intelligent.
 											var unitname = unit.get_UnitGameData_Obj().dn;
 										}
 									};
-									//console.debug("FLUNIK: OFFENCE - unitlvl: %f lowest: %f lowestupg: %f", unitlvl,lowestoffencelevel, lowestupgoffencelevel);
+									if (debug > 1) {
+										console.debug("FLUNIK: OFFENCE - unitlvl: %f lowest: %f lowestupg: %f", unitlvl,lowestoffencelevel, lowestupgoffencelevel);
+									}
 								};
 
 								if (lowestupgoffencelevel<999) {
@@ -336,85 +349,56 @@ intelligent.
 
 
 									if (tech == ClientLib.Base.ETechName.Harvester_Crystal) {
-										console.debug(infolineHeader+"Not sure what it is but Found a Harvester_Crystal!");
-									}
-									if 	(tech == ClientLib.Base.ETechName.Construction_Yard) {
+										if (debug > 0) {
+											console.debug(infolineHeader+"Not sure what it is but Found a Harvester_Crystal!");
+										}
+									} else if (tech == ClientLib.Base.ETechName.Construction_Yard) {
 										var CY=building;
-										continue;
-									};
-									if 	(tech == ClientLib.Base.ETechName.Barracks) {
+									} else if (tech == ClientLib.Base.ETechName.Barracks) {
 										var INF=building;
 										var infRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Infantry, false);
-										continue;
-									};
-									if 	(tech == ClientLib.Base.ETechName.Factory) {
+									} else if (tech == ClientLib.Base.ETechName.Factory) {
 										var VEH=building;
 										var vehRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Vehicle, false);
 										continue;
-									};
-									if 	(tech == ClientLib.Base.ETechName.Airport) {
+									} else if (tech == ClientLib.Base.ETechName.Airport) {
 										var AIR=building;
 										var airRT = city.get_CityUnitsData().GetRepairTimeFromEUnitGroup(ClientLib.Data.EUnitGroup.Aircraft, false);
-										continue;
-									};
-									if 	(tech == ClientLib.Base.ETechName.Command_Center) {
+									} else if (tech == ClientLib.Base.ETechName.Command_Center) {
 										var CC=building;
-										continue;
-									};
-									if 	(tech == ClientLib.Base.ETechName.Defense_HQ) {
+									} else if (tech == ClientLib.Base.ETechName.Defense_HQ) {
 										var DHQ=building;
-										continue;
-									};
-									if 	(tech == ClientLib.Base.ETechName.Defense_Facility) {
+									} else if (tech == ClientLib.Base.ETechName.Defense_Facility) {
 										var DF=building;
-										continue;
-									};
-									if (tech == ClientLib.Base.ETechName.Support_Air || tech == ClientLib.Base.ETechName.Support_Ion || tech == ClientLib.Base.ETechName.Support_Art) {
+									} else if (tech == ClientLib.Base.ETechName.Support_Air || tech == ClientLib.Base.ETechName.Support_Ion || tech == ClientLib.Base.ETechName.Support_Art) {
 										var SUPPORT=building;
-										continue;
-									};
-									if (currentpowpct>80) {
+									} else if (currentpowpct>80) {
 										// skip these on default upgrade if power is full
 										if (tech == ClientLib.Base.ETechName.PowerPlant) {
 											var numPOW=numPOW+1;
-											continue;
-										};
-										if (tech == ClientLib.Base.ETechName.Accumulator) {
-											continue;
-										};
+										} else if (tech == ClientLib.Base.ETechName.Accumulator) {
+										}
+									} else if (tech == ClientLib.Base.ETechName.Refinery) {
+										var numREF=numREF+1;
+									} else if (tech == ClientLib.Base.ETechName.Silo) {
+										var lowestsilolevel=buildinglvl;
+										var lowestsilo=building;
+									} else if (tech == ClientLib.Base.ETechName.Harvester) {
+										var numHAR=numHAR+1;
+									} else if (tech == ClientLib.Base.ETechName.PowerPlant) {
+										var numPOW=numPOW+1;
+									} else if (tech == ClientLib.Base.ETechName.Accumulator) {
+									} else {
+										if (debug > 0) {
+											console.debug("FLUNIK: You should NEVER see this - If you do the name of the building is: %s and is level: %d, tech is: %s", name, buildinglvl, tech);
+										}
 									}
-									// Buildings above this will never be a default upgrade
-									//console.debug("The %d building has a level of: %d", name, buildinglvl);
 									if	(buildinglvl < lowestbuildinglevel && building.CanUpgrade())	{
 										var lowestbuildinglevel=buildinglvl;
 										var lowestbuilding=building;
 										var lowestbuildingname=name;
-									};
-									if (tech == ClientLib.Base.ETechName.Refinery) {
-										var numREF=numREF+1;
-										continue;
-									};
-									if (tech == ClientLib.Base.ETechName.Silo) {
-										var lowestsilolevel=buildinglvl;
-										var lowestsilo=building;
-										continue;
-									};
-									if (tech == ClientLib.Base.ETechName.Harvester) {
-										var numHAR=numHAR+1;
-										continue;
-									};
-									if (tech == ClientLib.Base.ETechName.PowerPlant) {
-										var numPOW=numPOW+1;
-										continue;
-									};
-									if (tech == ClientLib.Base.ETechName.Accumulator) {
-										continue;
-									};
-
-									console.debug("FLUNIK: You should NEVER see this - If you do the name of the building is: %d and is level: %d", name, buildinglvl);
+									}
 								}; // for buildings
-
-
 
 //								FLUNIK: The Harvester building has a level of: 15 (program):234
 //								FLUNIK: The Power Plant building has a level of: 15 (program):234
@@ -422,35 +406,38 @@ intelligent.
 
 								var maxRT = Math.max(airRT,vehRT,infRT);
 								switch (maxRT) {
-								case airRT:
-									// Air has highest RT
-									var REPAIR=AIR;
-									var repairname="airport";
-									break;
-								case vehRT:
-									// Vehicle has highest RT
-									var REPAIR=VEH;
-									var repairname="vehicle";
-									break;
-								case infRT:
-									// Infantry has highest RT
-									var REPAIR=INF;
-									var repairname="infantry";
-									break;
+									case airRT:
+										// Air has highest RT
+										var REPAIR=AIR;
+										var repairname="airport";
+										break;
+									case vehRT:
+										// Vehicle has highest RT
+										var REPAIR=VEH;
+										var repairname="vehicle";
+										break;
+									case infRT:
+										// Infantry has highest RT
+										var REPAIR=INF;
+										var repairname="infantry";
+										break;
 								};
-								//console.debug("FLUNIK: %d The %d level is %d has repair time of %d",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
-								//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
+								if (debug > 0) {
+									console.debug("FLUNIK: %s The %s level is %d has repair time of %d", cityname, repairname, REPAIR.get_CurrentLevel(), maxRT);
+									console.debug("FLUNIK: %s Repair info in seconds: Max %d AIR %d VEH %d INF %d", cityname, maxRT, airRT, vehRT, infRT);
+								}
 
 								if (lowestbuilding != null) {
 									if (lowestbuildinglevel<6) {
-										console.log("FLUNIK: %s new building upgrade - %s level %d",cityname, lowestbuildingname, lowestbuildinglevel);
+										console.log("FLUNIK: %s new building upgrade - %s level %d", cityname, lowestbuildingname, lowestbuildinglevel);
 										lowestbuilding.Upgrade();
-										continue;
 									}
 								}
 
 								if (currentcrypct>80) {
-									//			console.debug("FLUNIK: Crystal is full - checking if CC or DHQ upgrades is required");
+									if (debug > 0) {
+										console.debug("FLUNIK: Crystal is full - checking if CC or DHQ upgrades is required");
+									}
 									var tryDHQ=true;
 									if (CC != null) {
 										var tryDHQ=false;
@@ -479,13 +466,17 @@ intelligent.
 								if (CY != null) {
 									if (CY.get_CurrentLevel() < 25) {
 										if (CY.CanUpgrade()) {
-											//console.debug("FLUNIK: %d The CY building level %d is lower than 25 - Upgrading",cityname, CY.get_CurrentLevel());
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The CY building level %d is lower than 25 - Upgrading",cityname, CY.get_CurrentLevel());
+											}
 											console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: CY<25");
 											CY.Upgrade();
 											continue;
 										} else {
 											var infolineSkipped=infolineSkipped+"CY<25,";
-											//console.debug("FLUNIK: %d The CY building level %d is lower than 25 but cant upgrade - skipping to next",cityname, CY.get_CurrentLevel());
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The CY building level %d is lower than 25 but cant upgrade - skipping to next",cityname, CY.get_CurrentLevel());
+											}
 											if (currenttibpct<80) {
 												console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
 												continue;
@@ -517,13 +508,17 @@ intelligent.
 								if (CC != null) {
 									if (CC.get_CurrentLevel() == lowestoffencelevel) {
 										if (CC.CanUpgrade()) {
-											//console.debug("FLUNIK: %d The CC building level %d matches lowest offence level %d - Upgrading",cityname, CC.get_CurrentLevel(), lowestoffencelevel);
-											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: CC=army "+CC.get_CurrentLevel());
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The CC building level %d matches lowest offence level %d - Upgrading",cityname, CC.get_CurrentLevel(), lowestoffencelevel);
+											}
+											console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: CC=army "+CC.get_CurrentLevel());
 											CC.Upgrade();
 											continue;
 										} else {
 											var infolineSkipped=infolineSkipped+"CC=army,";
-											//console.debug("FLUNIK: %d The CC building level %d matches lowest offence level %d but cant upgrade - skipping to next",cityname, CC.get_CurrentLevel(), lowestoffencelevel);
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The CC building level %d matches lowest offence level %d but cant upgrade - skipping to next",cityname, CC.get_CurrentLevel(), lowestoffencelevel);
+											}
 											if (currenttibpct<80) {
 												console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
 												continue;
@@ -544,13 +539,17 @@ intelligent.
 
 									if (DHQ.get_CurrentLevel() == lowestdefencelevel && tryDHQ) {
 										if (DHQ.CanUpgrade()) {
-											//console.debug("FLUNIK: %d The DHQ building level %d matches lowest defence level %d - Upgrading",cityname, DHQ.get_CurrentLevel(), lowestdefencelevel);
-											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: DHQ=def "+DHQ.get_CurrentLevel());
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The DHQ building level %d matches lowest defence level %d - Upgrading",cityname, DHQ.get_CurrentLevel(), lowestdefencelevel);
+											}
+											console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: DHQ=def "+DHQ.get_CurrentLevel());
 											DHQ.Upgrade();
 											continue;
 										} else {
 											var infolineSkipped=infolineSkipped+"DHQ=def,";
-											//console.debug("FLUNIK: %d The DHQ building level %d matches lowest defence level %d but cant upgrade - skipping to next",cityname, DHQ.get_CurrentLevel(), lowestoffencelevel);
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The DHQ building level %d matches lowest defence level %d but cant upgrade - skipping to next",cityname, DHQ.get_CurrentLevel(), lowestoffencelevel);
+											}
 											if (currenttibpct<80) {
 												console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
 												continue;
@@ -562,13 +561,17 @@ intelligent.
 								if (DF != null && DHQ != null) {
 									if (DF.get_CurrentLevel() < DHQ.get_CurrentLevel()) {
 										if (DF.CanUpgrade()) {
-											//console.debug("FLUNIK: %d The DF building level %d is lower than DHQ level %d - Upgrading",cityname, DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The DF building level %d is lower than DHQ level %d - Upgrading",cityname, DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											}
 											console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: DF<DHQ "+DF.get_CurrentLevel());
 											DF.Upgrade();
 											continue;
 										} else {
 											var infolineSkipped=infolineSkipped+"DF<DHQ,";
-											//console.debug("FLUNIK: %d The DF building level %d is lower than DHQ level %d but cant upgrade - skipping to next",cityname, DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The DF building level %d is lower than DHQ level %d but cant upgrade - skipping to next",cityname, DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											}
 											if (currenttibpct<80) {
 												console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
 												continue;
@@ -580,13 +583,17 @@ intelligent.
 								if (SUPPORT != null && DHQ != null) {
 									if (SUPPORT.get_CurrentLevel() < DHQ.get_CurrentLevel()) {
 										if (SUPPORT.CanUpgrade()) {
-											//console.debug("FLUNIK: %d The SUPPORT building level %d is lower than DHQ level %d - Upgrading",cityname, SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The SUPPORT building level %d is lower than DHQ level %d - Upgrading",cityname, SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											}
 											console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: SUPPORT<DHQ "+SUPPORT.get_CurrentLevel());
 											SUPPORT.Upgrade();
 											continue;
 										} else {
 											var infolineSkipped=infolineSkipped+"SUPPORT<DHQ,";
-											//console.debug("FLUNIK: %d The SUPPORT building level %d is lower than DHQ level %d but cant upgrade - skipping to next",cityname, SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The SUPPORT building level %d is lower than DHQ level %d but cant upgrade - skipping to next",cityname, SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
+											}
 											if (currenttibpct<80) {
 												console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
 												continue;
@@ -597,15 +604,21 @@ intelligent.
 
 								if (REPAIR != null) {
 									if (maxRT>21000) { // Always try to get time below 5:50 hours (21000 seconds)
-										//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
+										if (debug > 0) {
+											console.debug("FLUNIK: %s Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
+										}
 										if (REPAIR.CanUpgrade()) {
-											//console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The %s level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											}
 											console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: "+repairname+" "+maxRT+">21000 "+REPAIR.get_CurrentLevel());
 											REPAIR.Upgrade();
 											continue;
 										} else {
 											var infolineSkipped=infolineSkipped+repairname+" "+maxRT+">21000,";
-											//console.debug("FLUNIK: %d The %d level %d has repair time %d but cant upgrade - skipping to next",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The %s level %d has repair time %d but cant upgrade - skipping to next",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											}
 											if (currenttibpct<80) {
 												console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
 												continue;
@@ -616,15 +629,21 @@ intelligent.
 
 								if (REPAIR != null && CC != null) {
 									if (maxRT>14400 && REPAIR.get_CurrentLevel()<CC.get_CurrentLevel() && baselvl<20) { // No point upgrading unless RT > 4 hours (14400 seconds)
-										//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
+										if (debug > 0) {
+											console.debug("FLUNIK: %s Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
+										}
 										if (REPAIR.CanUpgrade()) {
-											//console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The %s level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											}
 											console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: "+repairname+" "+maxRT+">14400&REPAIR<CC "+REPAIR.get_CurrentLevel());
 											REPAIR.Upgrade();
 											continue;
 										} else {
 											var infolineSkipped=infolineSkipped+repairname+" "+maxRT+">14400&REPAIR<CC,";
-											//console.debug("FLUNIK: %d The %d level %d has repair time %d but cant upgrade - skipping to next",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											if (debug > 0) {
+												console.debug("FLUNIK: %s The %s level %d has repair time %d but cant upgrade - skipping to next",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
+											}
 											if (currenttibpct<80) {
 												console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
 												continue;
@@ -635,7 +654,9 @@ intelligent.
 
 								if (lowestbuilding != null) {
 									if (lowestbuildinglevel<0.66*baselvl && currenttibpct>2) {
-										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
+										if (debug > 0) {
+											console.debug("FLUNIK: %s Default upgrade - lowest building is %s level %d",cityname, lowestbuildingname, lowestbuildinglevel);
+										}
 										console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: lowest<0.66*baselvl "+lowestbuildingname+" lvl: "+lowestbuildinglevel)
 										lowestbuilding.Upgrade();
 										continue;
@@ -644,7 +665,9 @@ intelligent.
 
 								if (lowestsilo != null) {
 									if (lowestsilolevel<baselvl && currenttibpct>80) {
-										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
+										if (debug > 0) {
+											console.debug("FLUNIK: %s Default upgrade - lowest building is %s level %d",cityname, lowestbuildingname, lowestbuildinglevel);
+										}
 										console.log(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: lowestsilo<baselvl&tib>80 lvl: "+lowestsilolevel)
 										lowestsilo.Upgrade();
 										continue;
