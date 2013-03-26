@@ -443,7 +443,7 @@ intelligent.
 
 								if (lowestbuilding != null) {
 									if (lowestbuildinglevel<6) {
-										console.log("FLUNIK: %d new building upgrade - %s level %d",cityname, lowestbuildingname, lowestbuildinglevel);
+										console.log("FLUNIK: %s new building upgrade - %s level %d",cityname, lowestbuildingname, lowestbuildinglevel);
 										lowestbuilding.Upgrade();
 										continue;
 									}
