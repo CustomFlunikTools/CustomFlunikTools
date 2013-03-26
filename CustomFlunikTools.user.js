@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      RobertT Flunik dbendure KRS_L
-// @version     20130321a
+// @version     20130325c
 // ==/UserScript==
 
 /*
@@ -71,6 +71,7 @@ intelligent.
 					members: {
 						AutoUpdateButton: null,
 						autoUpdateHandle: null,
+						_this: null,
 
 						initialize: function () {
 
@@ -161,6 +162,75 @@ intelligent.
 							}
 						},
 
+						// Use
+						// this.canUpgradeUnit(unit, city)
+						// instead of
+						// unit.CanUpgrade()
+						canUpgradeUnit: function (unit, city) {
+							var _this = FlunikTools.Main.getInstance();
+							var nextLevel = unit.get_CurrentLevel() + 1;
+							var gameDataTech = unit.get_UnitGameData_Obj();
+							var hasEnoughResources = city.HasEnoughResources(ClientLib.Base.Util.GetTechLevelResourceRequirements_Obj(nextLevel, gameDataTech));
+						    if (gameDataTech == null || unit.get_IsDamaged() || city.get_IsLocked() || !hasEnoughResources) {
+						        return false;
+						    }
+						    var id = _this.getMainProductionBuildingMdbId(gameDataTech.pt, gameDataTech.f);
+						    var building = city.get_CityBuildingsData().GetBuildingByMDBId(id);
+						    if ((building == null) || (building.get_CurrentDamage() > 0)) {
+						        return false;
+						    }
+						    var levelReq = ClientLib.Base.Util.GetUnitLevelRequirements_Obj(nextLevel, gameDataTech);
+							var reqTechIndexes = _this.getMissingTechIndexesFromTechLevelRequirement(levelReq, true, city);
+						    if ((reqTechIndexes != null) && (reqTechIndexes.length > 0)) {
+						        return false;
+						    }
+						    return true;
+						},
+
+						getMainProductionBuildingMdbId: function (placementType, faction) {
+							var mdbId = -1;
+							var techNameId = -1;
+							if (placementType == 2) {
+								techNameId = 3;
+							} else {
+								techNameId = 4;
+							}
+							if (techNameId > 0) {
+								mdbId = ClientLib.Base.Tech.GetTechIdFromTechNameAndFaction(techNameId, faction);
+							}
+							return mdbId;
+						},
+
+						getMissingTechIndexesFromTechLevelRequirement: function (levelRequirements, breakAtFirst, city) {
+							var reqTechIndexes = [];
+							if (levelRequirements != null && levelRequirements.length > 0) {
+								for (var lvlIndex=0; (lvlIndex < levelRequirements.length); lvlIndex++) {
+									var lvlReq = levelRequirements[lvlIndex];
+									var requirementsMet = false;
+									var amountCounter = lvlReq.Amount;
+									for (var buildingIndex in city.get_Buildings().d) {
+										if (city.get_Buildings().d[buildingIndex].get_MdbBuildingId() == lvlReq.RequiredTechId && city.get_Buildings().d[buildingIndex].get_CurrentLevel() >= lvlReq.Level) {
+											amountCounter--;
+											if (amountCounter <= 0) {
+												requirementsMet=true;
+												break;
+											}
+										}
+									}
+									if (!requirementsMet) {
+										requirementsMet = ClientLib.Data.MainData.GetInstance().get_Player().get_PlayerResearch().IsResearchMinLevelAvailable(lvlReq.RequiredTechId, lvlReq.Level);
+									}
+									if (!requirementsMet) {
+										reqTechIndexes.push(lvlIndex);
+										if (breakAtFirst) {
+											return reqTechIndexes;
+										}
+									}
+								}
+							}
+							return reqTechIndexes;
+						},
+						
 						// Add the below function to your code and then use
 						// this.canUpgradeBuilding(building, city)
 						// instead of
@@ -275,7 +345,7 @@ intelligent.
 										var lowestoffencelevel=unitlvl;
 									}
 
-									if (unitlvl<lowestupgoffencelevel && unit.CanUpgrade()) {
+									if (unitlvl<lowestupgoffencelevel && _this.canUpgradeUnit(unit,city)) {
 										var lowestupgoffencelevel=unitlvl;
 										var lowestupgoffenceunit_obj=unit_obj;
 										var unitname = unit.get_UnitGameData_Obj().dn;
@@ -307,7 +377,7 @@ intelligent.
 										var lowestdefencelevel=unitlvl;
 									}
 
-									if (unitlvl < lowestupgdefencelevel && unit.CanUpgrade()) {
+									if (unitlvl < lowestupgdefencelevel && _this.canUpgradeUnit(unit,city)) {
 										var lowestupgdefencelevel=unitlvl;
 										var lowestupgdefenceunit_obj=unit_obj;
 										var unitname = unit.get_UnitGameData_Obj().dn;
@@ -351,9 +421,6 @@ intelligent.
 											posY: building.get_CoordY(),
 											isPaid: true
 									};
-									var CanUpgrade = _this.canUpgradeBuilding(building, city);
-									console.debug(infolineHeader+"CanUpgrade of "+name+" is "+CanUpgrade);
-
 									
 									if (tech == ClientLib.Base.ETechName.Harvester_Crystal) {
 										console.debug(infolineHeader+"Not sure what it is but Found a Harvester_Crystal!");
