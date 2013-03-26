@@ -161,6 +161,18 @@ intelligent.
 							}
 						},
 
+						// Add the below function to your code and then use
+						// this.canUpgradeBuilding(building, city)
+						// instead of
+						// building.CanUpgrade()
+
+						canUpgradeBuilding: function (building, city) {
+							var nextLevel = (building.get_CurrentLevel() + 1);
+							var gameDataTech = building.get_TechGameData_Obj();
+							var hasEnoughResources = city.HasEnoughResources(ClientLib.Base.Util.GetTechLevelResourceRequirements_Obj(nextLevel, gameDataTech));
+							return (!building.get_IsDamaged() && !city.get_IsLocked() && hasEnoughResources);
+						},
+						
 						get_IsFull: function (city, type) {
 							if (city.GetResourceCount(type) < (city.GetResourceMaxStorage(type)*0.80)) {
 								return false;
@@ -187,6 +199,7 @@ intelligent.
 						},
 
 						autoUpgrade: function () {
+							var _this = FlunikTools.Main.getInstance();
 						
 							for (var nCity in ClientLib.Data.MainData.GetInstance().get_Cities().get_AllCities().d) {
 								var city = ClientLib.Data.MainData.GetInstance().get_Cities().get_AllCities().d[nCity];
@@ -338,6 +351,8 @@ intelligent.
 											posY: building.get_CoordY(),
 											isPaid: true
 									};
+									var CanUpgrade = _this.canUpgradeBuilding(building, city);
+									console.debug(infolineHeader+"CanUpgrade of "+name+" is "+CanUpgrade);
 
 									
 									if (tech == ClientLib.Base.ETechName.Harvester_Crystal) {
@@ -390,7 +405,8 @@ intelligent.
 									}
 									// Buildings above this will never be a default upgrade
 									//console.debug("The %d building has a level of: %d", name, buildinglvl);
-									if	(buildinglvl < lowestbuildinglevel && building.CanUpgrade())	{
+									
+									if	(buildinglvl < lowestbuildinglevel && _this.canUpgradeBuilding(building, city) )	{
 										var lowestbuildinglevel=buildinglvl;
 										var lowestbuilding=building;
 										var lowestbuildingname=name;
@@ -460,7 +476,7 @@ intelligent.
 									if (CC != null) {
 										var tryDHQ=false;
 										if (CC.get_CurrentLevel() == lowestoffencelevel) {
-											if (CC.CanUpgrade()) {
+											if (_this.canUpgradeBuilding(CC, city)) {
 												console.debug(infolineHeader+infolineUnits+" - Crystal is full - Upgrading CC since offencelevel is maximum");
 												CC.Upgrade();
 												return;
@@ -472,7 +488,7 @@ intelligent.
 
 									// tryDHQ will only be true if CC exists, offence level is maxed and CC unable to upgrade
 									if (DHQ != null && tryDHQ) { 
-										if (DHQ.get_CurrentLevel() == lowestdefencelevel && DHQ.CanUpgrade()) {
+										if (DHQ.get_CurrentLevel() == lowestdefencelevel && _this.canUpgradeBuilding(DHQ, city)) {
 											console.debug(infolineHeader+infolineUnits+" - Crystal is full - Upgrading DHQ since defencelevel is maximum");
 											DHQ.Upgrade();
 											return;
@@ -483,7 +499,7 @@ intelligent.
 								// ClientLib.Data.MainData.GetInstance().get_Cities().get_CurrentOwnCity().get_CityBuildingsData().GetFullRepairTime()
 								if (CY != null) { 
 									if (CY.get_CurrentLevel() < 25) {
-										if (CY.CanUpgrade()) {
+										if (_this.canUpgradeBuilding(CY, city)) {
 											//console.debug("FLUNIK: %d The CY building level %d is lower than 25 - Upgrading",cityname, CY.get_CurrentLevel());
 											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: CY<25");
 											CY.Upgrade();
@@ -521,7 +537,7 @@ intelligent.
 
 								if (CC != null) { 
 									if (CC.get_CurrentLevel() == lowestoffencelevel) {
-										if (CC.CanUpgrade()) {
+										if (_this.canUpgradeBuilding(CC, city)) {
 											//console.debug("FLUNIK: %d The CC building level %d matches lowest offence level %d - Upgrading",cityname, CC.get_CurrentLevel(), lowestoffencelevel);
 											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: CC=army "+CC.get_CurrentLevel());
 											CC.Upgrade();
@@ -548,7 +564,7 @@ intelligent.
 									}
 
 									if (DHQ.get_CurrentLevel() == lowestdefencelevel && tryDHQ) {
-										if (DHQ.CanUpgrade()) {
+										if (_this.canUpgradeBuilding(DHQ, city)) {
 											//console.debug("FLUNIK: %d The DHQ building level %d matches lowest defence level %d - Upgrading",cityname, DHQ.get_CurrentLevel(), lowestdefencelevel);
 											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: DHQ=def "+DHQ.get_CurrentLevel());
 											DHQ.Upgrade();
@@ -566,7 +582,7 @@ intelligent.
 
 								if (DF != null && DHQ != null) { 
 									if (DF.get_CurrentLevel() < DHQ.get_CurrentLevel()) {
-										if (DF.CanUpgrade()) {
+										if (_this.canUpgradeBuilding(DF, city)) {
 											//console.debug("FLUNIK: %d The DF building level %d is lower than DHQ level %d - Upgrading",cityname, DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
 											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: DF<DHQ "+DF.get_CurrentLevel());
 											DF.Upgrade();
@@ -584,7 +600,7 @@ intelligent.
 
 								if (SUPPORT != null && DHQ != null) { 
 									if (SUPPORT.get_CurrentLevel() < DHQ.get_CurrentLevel()) {
-										if (SUPPORT.CanUpgrade()) {
+										if (_this.canUpgradeBuilding(SUPPORT, city)) {
 											//console.debug("FLUNIK: %d The SUPPORT building level %d is lower than DHQ level %d - Upgrading",cityname, SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
 											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: SUPPORT<DHQ "+SUPPORT.get_CurrentLevel());
 											SUPPORT.Upgrade();
@@ -603,7 +619,7 @@ intelligent.
 								if (REPAIR != null) {
 									if (maxRT>21000) { // Always try to get time below 5:50 hours (21000 seconds)
 										//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
-										if (REPAIR.CanUpgrade()) {
+										if (_this.canUpgradeBuilding(REPAIR, city)) {
 											//console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
 											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: "+repairname+" "+maxRT+">21000 "+REPAIR.get_CurrentLevel());
 											REPAIR.Upgrade();
@@ -622,7 +638,7 @@ intelligent.
 								if (REPAIR != null && CC != null) {
 									if (maxRT>14400 && REPAIR.get_CurrentLevel()<CC.get_CurrentLevel() && baselvl<20) { // No point upgrading unless RT > 4 hours (14400 seconds)
 										//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
-										if (REPAIR.CanUpgrade()) {
+										if (_this.canUpgradeBuilding(REPAIR, city)) {
 											//console.debug("FLUNIK: %d The %d level %d has repair time of %d - Upgrading",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
 											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: "+repairname+" "+maxRT+">14400&REPAIR<CC "+REPAIR.get_CurrentLevel());
 											REPAIR.Upgrade();
@@ -716,7 +732,7 @@ intelligent.
 								}
 
 								if (lowestbuilding != null) { 
-									if (lowestbuilding.CanUpgrade() && currenttibpct>95) {
+									if (_this.canUpgradeBuilding(lowestbuilding, city) && currenttibpct>95) {
 										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
 										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Default Upg: "+lowestbuildingname+" lvl: "+lowestbuildinglevel)
 										lowestbuilding.Upgrade();
