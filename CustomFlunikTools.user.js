@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      RobertT Flunik dbendure KRS_L
-// @version     20130325c
+// @version     20130325d
 // ==/UserScript==
 
 /*
@@ -30,7 +30,7 @@ Script does this (in this order):
 5. if crystal is more than 80% full and your offence is maxed out try to upgrade CC 
 6. if #4 is true but you cant upgrade your CC (or you dont have one) and defence is maxed out try to upgrade DHQ 
 7. if your CY < level 25 upgrade CY 
-8. (removed for testing) if your CC < base level upgrade CC 
+8. if City Repair time is > 11:45 hours upgrade the CY 
 9. if your offence is maxed out upgrade CC 
 10. if your DHQ is two levels below CC and defence is maxed upgrade DHQ 
 11. if you have no CC and defence is maxed upgrade DHQ 
@@ -309,6 +309,8 @@ intelligent.
 									}
 								}
 
+								//var CityRT = ClientLib.Data.MainData.GetInstance().get_Cities().get_CurrentOwnCity().get_CityBuildingsData().GetFullRepairTime();
+								var CityRT = city.get_CityBuildingsData().GetFullRepairTime();
 								
 //								console.debug("FLUNIK: Tiberium current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Tiberium),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Tiberium));
 //								console.debug("FLUNIK: Crystal current %d max %d",city.GetResourceCount(ClientLib.Base.EResourceType.Crystal),city.GetResourceMaxStorage(ClientLib.Base.EResourceType.Crystal));
@@ -562,8 +564,7 @@ intelligent.
 										}
 									};
 								};
-								
-								// ClientLib.Data.MainData.GetInstance().get_Cities().get_CurrentOwnCity().get_CityBuildingsData().GetFullRepairTime()
+ 
 								if (CY != null) { 
 									if (CY.get_CurrentLevel() < 25) {
 										if (_this.canUpgradeBuilding(CY, city)) {
@@ -573,6 +574,25 @@ intelligent.
 											return;
 										} else {
 											var infolineSkipped=infolineSkipped+"CY<25,";
+											//console.debug("FLUNIK: %d The CY building level %d is lower than 25 but cant upgrade - skipping to next",cityname, CY.get_CurrentLevel());
+											if (currenttibpct<80) { 
+												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
+												continue; 
+											}
+										};
+									}
+								};
+
+								//CityRT
+								if (CY != null) { 
+									if (CityRT > 42300) {
+										if (_this.canUpgradeBuilding(CY, city)) {
+											//console.debug("FLUNIK: %d The CY building level %d is lower than 25 - Upgrading",cityname, CY.get_CurrentLevel());
+											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: CityRT>11:45");
+											CY.Upgrade();
+											return;
+										} else {
+											var infolineSkipped=infolineSkipped+"CityRT>11:45,";
 											//console.debug("FLUNIK: %d The CY building level %d is lower than 25 but cant upgrade - skipping to next",cityname, CY.get_CurrentLevel());
 											if (currenttibpct<80) { 
 												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
