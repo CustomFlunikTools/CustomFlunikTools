@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      RobertT Flunik dbendure KRS_L
-// @version     20130325d
+// @version     20130329c
 // ==/UserScript==
 
 /*
@@ -307,7 +307,7 @@ intelligent.
 									//console.debug("FLUNIK: OFFENCE - unitlvl: %d lowest: %d lowestupg: %d", unitlvl,lowestoffencelevel,lowestupgoffencelevel);
 								};
 								if (lowestupgoffencelevel<999) {
-									if (!FlunikTools.Main.prototype.CanRepairAll(city,ClientLib.Vis.Mode.ArmySetup) || blockoff) {
+									if (!FlunikTools.Main.prototype.CanRepairAll(city,ClientLib.Vis.Mode.ArmySetup) && !blockoff) {
 										var infolineUnits = infolineUnits+" - O: "+unitname+" "+lowestupgoffencelevel;
 										//			var upgradeinfo = "FLUNIK: %d Upgrading %d offence unit from level of: %d",cityname, unitname, lowestupgoffencelevel);
 										ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestupgoffenceunit_obj, null, null, true);
@@ -340,7 +340,7 @@ intelligent.
 
 								};
 								if (lowestupgdefencelevel<999) {
-									if (!FlunikTools.Main.prototype.CanRepairAll(city,ClientLib.Vis.Mode.ArmySetup) || blockdef) {
+									if (!FlunikTools.Main.prototype.CanRepairAll(city,ClientLib.Vis.Mode.ArmySetup) && !blockdef) {
 										var infolineUnits = infolineUnits+" - D: "+unitname+" "+lowestupgdefencelevel;
 										//			console.debug("FLUNIK: %d Upgrading %d defence unit from level of: %d",cityname, unitname, lowestupgdefencelevel);
 										ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UnitUpgrade", lowestupgdefenceunit_obj, null, null, true);
@@ -437,7 +437,7 @@ intelligent.
 										continue;
 									}; 
 									if (tech == ClientLib.Base.ETechName.Silo) {
-										if (buildinglevel<lowestsilolevel) {
+										if (buildinglvl<lowestsilolevel) {
 											var lowestsilolevel=buildinglvl;
 											var lowestsilo=building;
 										}
