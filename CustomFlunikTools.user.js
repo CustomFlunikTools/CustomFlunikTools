@@ -162,73 +162,25 @@ intelligent.
 							}
 						},
 
-						// Use
-						// this.canUpgradeUnit(unit, city)
-						// instead of
-						// unit.CanUpgrade()
 						canUpgradeUnit: function (unit, city) {
-							var _this = FlunikTools.Main.getInstance();
+							if (unit.get_IsDamaged() || city.get_IsLocked()) return false;
+
 							var nextLevel = unit.get_CurrentLevel() + 1;
 							var gameDataTech = unit.get_UnitGameData_Obj();
 							var hasEnoughResources = city.HasEnoughResources(ClientLib.Base.Util.GetTechLevelResourceRequirements_Obj(nextLevel, gameDataTech));
-						    if (gameDataTech == null || unit.get_IsDamaged() || city.get_IsLocked() || !hasEnoughResources) {
-						        return false;
-						    }
-						    var id = _this.getMainProductionBuildingMdbId(gameDataTech.pt, gameDataTech.f);
-						    var building = city.get_CityBuildingsData().GetBuildingByMDBId(id);
-						    if ((building == null) || (building.get_CurrentDamage() > 0)) {
-						        return false;
-						    }
-						    var levelReq = ClientLib.Base.Util.GetUnitLevelRequirements_Obj(nextLevel, gameDataTech);
-							var reqTechIndexes = _this.getMissingTechIndexesFromTechLevelRequirement(levelReq, true, city);
-						    if ((reqTechIndexes != null) && (reqTechIndexes.length > 0)) {
-						        return false;
-						    }
-						    return true;
-						},
+							if (gameDataTech == null || !hasEnoughResources) return false;
 
-						getMainProductionBuildingMdbId: function (placementType, faction) {
-							var mdbId = -1;
-							var techNameId = -1;
-							if (placementType == 2) {
-								techNameId = 3;
+							var placementType = gameDataTech.pt;
+							if (placementType == ClientLib.Base.EPlacementType.Offense) {
+								var techName = ClientLib.Base.ETechName.Command_Center;
 							} else {
-								techNameId = 4;
+								var techName = ClientLib.Base.ETechName.Defense_HQ;
 							}
-							if (techNameId > 0) {
-								mdbId = ClientLib.Base.Tech.GetTechIdFromTechNameAndFaction(techNameId, faction);
-							}
-							return mdbId;
-						},
 
-						getMissingTechIndexesFromTechLevelRequirement: function (levelRequirements, breakAtFirst, city) {
-							var reqTechIndexes = [];
-							if (levelRequirements != null && levelRequirements.length > 0) {
-								for (var lvlIndex=0; (lvlIndex < levelRequirements.length); lvlIndex++) {
-									var lvlReq = levelRequirements[lvlIndex];
-									var requirementsMet = false;
-									var amountCounter = lvlReq.Amount;
-									for (var buildingIndex in city.get_Buildings().d) {
-										if (city.get_Buildings().d[buildingIndex].get_MdbBuildingId() == lvlReq.RequiredTechId && city.get_Buildings().d[buildingIndex].get_CurrentLevel() >= lvlReq.Level) {
-											amountCounter--;
-											if (amountCounter <= 0) {
-												requirementsMet=true;
-												break;
-											}
-										}
-									}
-									if (!requirementsMet) {
-										requirementsMet = ClientLib.Data.MainData.GetInstance().get_Player().get_PlayerResearch().IsResearchMinLevelAvailable(lvlReq.RequiredTechId, lvlReq.Level);
-									}
-									if (!requirementsMet) {
-										reqTechIndexes.push(lvlIndex);
-										if (breakAtFirst) {
-											return reqTechIndexes;
-										}
-									}
-								}
-							}
-							return reqTechIndexes;
+							var building = city.get_CityBuildingsData().GetUniqueBuildingByTechName(techName);
+							if (building == null || building.get_CurrentDamage() > 0 || nextLevel > building.get_CurrentLevel()) return false;
+
+							return true;
 						},
 						
 						// Add the below function to your code and then use
@@ -485,8 +437,10 @@ intelligent.
 										continue;
 									}; 
 									if (tech == ClientLib.Base.ETechName.Silo) {
-										var lowestsilolevel=buildinglvl;
-										var lowestsilo=building;
+										if (buildinglevel<lowestsilolevel) {
+											var lowestsilolevel=buildinglvl;
+											var lowestsilo=building;
+										}
 										continue;
 									}; 
 									if (tech == ClientLib.Base.ETechName.Harvester) {
@@ -531,14 +485,6 @@ intelligent.
 								//console.debug("FLUNIK: %d The %d level is %d has repair time of %d",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
 								//console.debug("FLUNIK: %d Repair info in seconds: Max %d AIR %d VEH %d INF %d",cityname, maxRT, airRT, vehRT, infRT);
 
-								if (lowestbuilding != null) { 
-									if (lowestbuildinglevel<6) {
-										console.debug("FLUNIK: %d new building upgrade - %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
-										lowestbuilding.Upgrade();
-										return;
-									}
-								}
-								
 								if (currentcrypct>80) {
 									//			console.debug("FLUNIK: Crystal is full - checking if CC or DHQ upgrades is required");
 									var tryDHQ=true;
@@ -601,26 +547,6 @@ intelligent.
 										};
 									}
 								};
-
-								/* Dont think this is necessary..
-								if (CC != null) { 
-									if (CC.get_CurrentLevel() < baselvl) {
-										if (CC.CanUpgrade()) {
-											//console.debug("FLUNIK: %d The CC building level %d is lower than base level %d - Upgrading",cityname, CC.get_CurrentLevel(), baselvl);
-											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: CC<base "+CC.get_CurrentLevel());
-											CC.Upgrade();
-											return;
-										} else {
-											var infolineSkipped=infolineSkipped+"CC<base,";
-											//console.debug("FLUNIK: %d The CC building level %d is lower than base level %d but cant upgrade - skipping to next",cityname, CC.get_CurrentLevel(), baselvl);
-											if (currenttibpct<80) { 
-												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
-												continue; 
-											}
-										};
-									}
-								};
-								*/
 
 								if (CC != null) { 
 									if (CC.get_CurrentLevel() == lowestoffencelevel) {
