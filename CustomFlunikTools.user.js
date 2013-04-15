@@ -275,7 +275,7 @@ intelligent.
 								
 
 								
-								var d = new Date()
+								var d = new Date();
 								var infolineHeader = d.toLocaleTimeString()+" FLUNIK: "+cityname+" - T:"+currenttibpct+" C:"+currentcrypct+" P:"+currentpowpct;
 								var infolineUnits = "";
 								var infolineSkipped = "";
@@ -525,7 +525,7 @@ intelligent.
 											var infolineSkipped=infolineSkipped+"CY<25,";
 											//console.debug("FLUNIK: %d The CY building level %d is lower than 25 but cant upgrade - skipping to next",cityname, CY.get_CurrentLevel());
 											if (currenttibpct<80) { 
-												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
+												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped);
 												continue; 
 											}
 										};
@@ -544,7 +544,7 @@ intelligent.
 											var infolineSkipped=infolineSkipped+"CityRT>11:45,";
 											//console.debug("FLUNIK: %d The CY building level %d is lower than 25 but cant upgrade - skipping to next",cityname, CY.get_CurrentLevel());
 											if (currenttibpct<80) { 
-												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
+												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped);
 												continue; 
 											}
 										};
@@ -562,7 +562,7 @@ intelligent.
 											var infolineSkipped=infolineSkipped+"CC=army,";
 											//console.debug("FLUNIK: %d The CC building level %d matches lowest offence level %d but cant upgrade - skipping to next",cityname, CC.get_CurrentLevel(), lowestoffencelevel);
 											if (currenttibpct<80) { 
-												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
+												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped);
 												continue; 
 											}
 										};
@@ -589,7 +589,7 @@ intelligent.
 											var infolineSkipped=infolineSkipped+"DHQ=def,";
 											//console.debug("FLUNIK: %d The DHQ building level %d matches lowest defence level %d but cant upgrade - skipping to next",cityname, DHQ.get_CurrentLevel(), lowestoffencelevel);
 											if (currenttibpct<80) { 
-												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
+												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped);
 												continue; 
 											}
 										};
@@ -607,7 +607,7 @@ intelligent.
 											var infolineSkipped=infolineSkipped+"DF<DHQ,";
 											//console.debug("FLUNIK: %d The DF building level %d is lower than DHQ level %d but cant upgrade - skipping to next",cityname, DF.get_CurrentLevel(), DHQ.get_CurrentLevel());
 											if (currenttibpct<80) { 
-												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
+												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped);
 												continue; 
 											}
 										};
@@ -625,7 +625,7 @@ intelligent.
 											var infolineSkipped=infolineSkipped+"SUPPORT<DHQ,";
 											//console.debug("FLUNIK: %d The SUPPORT building level %d is lower than DHQ level %d but cant upgrade - skipping to next",cityname, SUPPORT.get_CurrentLevel(), DHQ.get_CurrentLevel());
 											if (currenttibpct<80) { 
-												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
+												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped);
 												continue; 
 											}
 										};
@@ -644,7 +644,7 @@ intelligent.
 											var infolineSkipped=infolineSkipped+repairname+" "+maxRT+">21000,";
 											//console.debug("FLUNIK: %d The %d level %d has repair time %d but cant upgrade - skipping to next",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
 											if (currenttibpct<80) { 
-												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
+												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped);
 												continue; 
 											}
 										};
@@ -663,7 +663,7 @@ intelligent.
 											var infolineSkipped=infolineSkipped+repairname+" "+maxRT+">14400&REPAIR<CC,";
 											//console.debug("FLUNIK: %d The %d level %d has repair time %d but cant upgrade - skipping to next",cityname,repairname, REPAIR.get_CurrentLevel(), maxRT);
 											if (currenttibpct<80) { 
-												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
+												console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped);
 												continue; 
 											}
 										};
@@ -673,7 +673,7 @@ intelligent.
 								if (lowestbuilding != null) { 
 									if (lowestbuildinglevel<0.66*baselvl && currenttibpct>2) {
 										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
-										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: lowest<0.66*baselvl "+lowestbuildingname+" lvl: "+lowestbuildinglevel)
+										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: lowest<0.66*baselvl "+lowestbuildingname+" lvl: "+lowestbuildinglevel);
 										lowestbuilding.Upgrade();
 										return;
 									}
@@ -682,7 +682,7 @@ intelligent.
 								if (lowestsilo != null) { 
 									if (lowestsilolevel<baselvl && currenttibpct>80) {
 										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
-										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: lowestsilo<baselvl&tib>80 lvl: "+lowestsilolevel)
+										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: lowestsilo<baselvl&tib>80 lvl: "+lowestsilolevel);
 										lowestsilo.Upgrade();
 										return;
 									}
@@ -697,7 +697,7 @@ intelligent.
 								if (currenttibpct>20){
 									var mlist = new Array();
 									var tlist = new Array();
-									var minTick=99999
+									var minTick=99999;
 									if (cityname.indexOf('.') !== -1 || cityname.indexOf('-') !== -1) {
 										if (cityname.indexOf('.') !== -1) {
 											var tprio="forced power "+numPOW+"PP>"+numREF+"RF ";
@@ -740,7 +740,7 @@ intelligent.
 										}
 									}
 									if (typeof(mlist[0])=='object') {
-										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Priority "+tprio+" Upg: "+mlist[0]['Type']+" lvl: "+mlist[0]['Level'])
+										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Priority "+tprio+" Upg: "+mlist[0]['Type']+" lvl: "+mlist[0]['Level']);
 										ClientLib.Net.CommunicationManager.GetInstance().SendCommand("UpgradeBuilding", mlist[0]['Building'], null, null, true);
 //										console.debug(FlunikTools.Main.prototype.print_r(mlist));  
 										return;
@@ -749,14 +749,14 @@ intelligent.
 
 								if (lowestbuilding != null) { 
 									if (_this.canUpgradeBuilding(lowestbuilding, city) && currenttibpct>95) {
-										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);
-										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Default Upg: "+lowestbuildingname+" lvl: "+lowestbuildinglevel)
+										//console.debug("FLUNIK: %d Default upgrade - lowest building is %d level %d",cityname, lowestbuildingname, lowestbuildinglevel);;
+										console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Default Upg: "+lowestbuildingname+" lvl: "+lowestbuildinglevel);
 										lowestbuilding.Upgrade();
 										return;
 									}
 								}
 								if (infolineSkipped != "" || infolineUnits != "" ){
-									console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped)
+									console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped);
 								}
 
 							}; // for city
