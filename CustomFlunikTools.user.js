@@ -4,7 +4,7 @@
 // @description Only uses the AutoUpgrade Feature For C&C Tiberium Alliances
 // @include     http*://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @author      RobertT Flunik dbendure KRS_L
-// @version     20130329c
+// @version     20130415a
 // ==/UserScript==
 
 /*
@@ -295,6 +295,9 @@ intelligent.
 											unitId: unit.get_Id()
 									};
 
+									if (unitlvl == 1) {
+										continue;
+									}
 									if (unitlvl<lowestoffencelevel) {
 										var lowestoffencelevel=unitlvl;
 									}
@@ -531,7 +534,7 @@ intelligent.
 
 								//CityRT
 								if (CY != null) { 
-									if (CityRT > 42300) {
+									if (CityRT > 85500) {
 										if (_this.canUpgradeBuilding(CY, city)) {
 											//console.debug("FLUNIK: %d The CY building level %d is lower than 25 - Upgrading",cityname, CY.get_CurrentLevel());
 											console.debug(infolineHeader+infolineUnits+" - Skipped: "+infolineSkipped+" - Upg: CityRT>11:45");
